@@ -1,0 +1,34 @@
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'java'
+}
+
+group 'pl.edu.agh.torbjorns'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation(
+            'org.junit.jupiter:junit-jupiter-api:5.1.0'
+    )
+    testRuntimeOnly(
+            'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    )
+    compile group: 'com.google.inject', name: 'guice', version: '4.0'
+    testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.23.0'
+    testCompile("org.assertj:assertj-core:3.11.1")
+}
+
+lombok {
+    version = '1.18.4'
+    sha256 = ""
+}
+
+test {
+    useJUnitPlatform()
+}
