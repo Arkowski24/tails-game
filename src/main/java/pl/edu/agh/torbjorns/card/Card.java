@@ -1,9 +1,11 @@
 package pl.edu.agh.torbjorns.card;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
+@AllArgsConstructor
 public class Card {
-    private Rank rank;
-    private Suit suit;
+    private final Rank rank;
+    private final Suit suit;
 }

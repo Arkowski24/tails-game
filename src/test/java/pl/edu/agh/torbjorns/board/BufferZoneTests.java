@@ -13,9 +13,9 @@ public class BufferZoneTests {
         BufferZone bufferZone = new BufferZone();
         for (int i = 0; i < BufferZone.SIZE; i++) {
             Card card = Mockito.mock(Card.class);
-            bufferZone.addCard(card, i);
+            bufferZone.putCard(card, i);
 
-            Card retrievedCard = bufferZone.getCard(i);
+            Card retrievedCard = bufferZone.takeCard(i);
             assertThat(retrievedCard).isEqualTo(card);
         }
     }
