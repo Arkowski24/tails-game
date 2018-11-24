@@ -1,27 +1,59 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
+    }
+}
+
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
     id 'java'
 }
 
+apply plugin: 'application'
+apply plugin: 'com.google.osdetector'
+
+ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+
 group 'pl.edu.agh.torbjorns'
 version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation(
-            'org.junit.jupiter:junit-jupiter-api:5.1.0'
-    )
-    testRuntimeOnly(
-            'org.junit.jupiter:junit-jupiter-engine:5.1.0'
-    )
-    compile group: 'com.google.inject', name: 'guice', version: '4.0'
-    testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.23.0'
-    testCompile("org.assertj:assertj-core:3.11.1")
+    implementation "com.google.inject:guice:4.0"
+    implementation "org.openjfx:javafx-base:11.0.1:$platform"
+    implementation "org.openjfx:javafx-graphics:11.0.1:$platform"
+    implementation "org.openjfx:javafx-controls:11.0.1:$platform"
+    implementation "org.openjfx:javafx-fxml:11.0.1:$platform"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.1.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.1.0"
+    testImplementation "org.mockito:mockito-junit-jupiter:2.23.0"
+    testImplementation "org.assertj:assertj-core:3.11.1"
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls,javafx.fxml',
+        ]
+    }
+}
+
+run {
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls,javafx.fxml'
+        ]
+    }
+    main = 'pl.edu.agh.torbjorns.Main'
 }
 
 lombok {
