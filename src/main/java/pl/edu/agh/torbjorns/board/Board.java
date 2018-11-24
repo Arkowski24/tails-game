@@ -8,7 +8,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Getter
 public class Board {
-    private final List<CardStack> finishedCardStacks;
+    private final List<FinishedCardStack> finishedCardStacks;
     private final List<CardStack> workingCardStacks;
     private final BufferZone bufferZone;
 }

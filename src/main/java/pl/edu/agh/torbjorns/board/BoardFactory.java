@@ -21,7 +21,7 @@ public class BoardFactory {
     private final Dealer dealer;
 
     public Board createBoard(Deck deck) {
-        List<CardStack> finishedCardStacks =
+        var finishedCardStacks =
                 Stream.of(FINISHED_CARD_STACK_SUITS)
                         .map(FinishedCardStack::new)
                         .collect(toUnmodifiableList());
