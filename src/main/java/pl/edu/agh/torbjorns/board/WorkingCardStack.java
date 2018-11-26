@@ -11,9 +11,16 @@ public class WorkingCardStack extends CardStack {
             return card.getRank() == Rank.KING;
         } else {
             var topCard = getTopCard();
-            return card.getSuit().getColor() != topCard.getSuit().getColor()
-                    && card.getRank().isFollowedBy(topCard.getRank());
+            return haveOppositeColors(card, topCard) && haveSubsequentRanks(card, topCard);
         }
+    }
+
+    private boolean haveOppositeColors(Card card1, Card card2) {
+        return card1.getColor() != card2.getColor();
+    }
+
+    private boolean haveSubsequentRanks(Card card1, Card card2) {
+        return card1.getRank().isFollowedBy(card2.getRank());
     }
 
 }
