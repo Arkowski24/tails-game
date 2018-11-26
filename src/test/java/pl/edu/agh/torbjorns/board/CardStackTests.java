@@ -12,7 +12,7 @@ public class CardStackTests {
 
     @Test
     void putCardTest() {
-        CardStack cardStack = new CardStack();
+        CardStack cardStack = new WorkingCardStack();
 
         Card card = Mockito.mock(Card.class);
         cardStack.putCard(card);
@@ -23,7 +23,7 @@ public class CardStackTests {
 
     @Test
     void removeCardTest() {
-        CardStack cardStack = new CardStack();
+        CardStack cardStack = new WorkingCardStack();
         Card card = Mockito.mock(Card.class);
 
         cardStack.putCard(card);
@@ -36,7 +36,7 @@ public class CardStackTests {
 
     @Test
     void getCardsInOrderTest() {
-        CardStack cardStack = new CardStack();
+        CardStack cardStack = new WorkingCardStack();
         Card card1 = Mockito.mock(Card.class);
         Card card2 = Mockito.mock(Card.class);
         Card card3 = Mockito.mock(Card.class);
