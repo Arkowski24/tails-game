@@ -7,11 +7,27 @@ import pl.edu.agh.torbjorns.card.Rank;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.*;
 
 public class BoardFactory {
 
     public Board createBoard(Deck deck) {
-        var board = new Board();
+        List<CardStack> finishedCardStacks =
+                Stream.of(Board.FINISHED_CARD_STACK_SUITS)
+                        .map(FinishedCardStack::new)
+                        .collect(toUnmodifiableList());
+
+        List<CardStack> workingCardStacks =
+                Stream.generate(WorkingCardStack::new)
+                        .limit(Board.WORKING_CARD_STACK_COUNT)
+                        .collect(toUnmodifiableList());
+
+        var bufferZone = new BufferZone();
+
+        var board = new Board(finishedCardStacks, workingCardStacks, bufferZone);
 
         new Placer(board, deck)
                 .placeCards();
