@@ -1,5 +1,6 @@
 package pl.edu.agh.torbjorns.board;
 
+import com.google.common.base.Preconditions;
 import lombok.NonNull;
 import pl.edu.agh.torbjorns.card.Card;
 
@@ -33,21 +34,15 @@ public class BufferZone {
     }
 
     private void checkPlaceIndex(int place) {
-        if (place < 0 || place > SIZE) {
-            throw new IndexOutOfBoundsException("Invalid place");
-        }
+        Preconditions.checkElementIndex(place, SIZE, "place");
     }
 
     private void requirePlaceEmpty(int place) {
-        if (cards[place] != null) {
-            throw new IllegalStateException("Place is not empty");
-        }
+        Preconditions.checkState(cards[place] != null, "Place is not empty");
     }
 
     private void requirePlaceNotEmpty(int place) {
-        if (cards[place] == null) {
-            throw new IllegalStateException("Place is empty");
-        }
+        Preconditions.checkState(cards[place] == null, "Place is empty");
     }
 
 }
