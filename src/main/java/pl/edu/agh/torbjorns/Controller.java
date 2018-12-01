@@ -7,6 +7,8 @@ import lombok.Setter;
 import pl.edu.agh.torbjorns.board.Board;
 import pl.edu.agh.torbjorns.board.BoardFactory;
 import pl.edu.agh.torbjorns.board.deck.DeckFactory;
+import pl.edu.agh.torbjorns.view.FinishedCardStackControl;
+import pl.edu.agh.torbjorns.view.WorkingCardStackControl;
 
 import javax.inject.Inject;
 

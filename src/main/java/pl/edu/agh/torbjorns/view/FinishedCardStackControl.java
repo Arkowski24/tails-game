@@ -1,4 +1,4 @@
-package pl.edu.agh.torbjorns;
+package pl.edu.agh.torbjorns.view;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

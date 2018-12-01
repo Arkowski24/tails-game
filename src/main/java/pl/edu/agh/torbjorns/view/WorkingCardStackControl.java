@@ -1,4 +1,4 @@
-package pl.edu.agh.torbjorns;
+package pl.edu.agh.torbjorns.view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
