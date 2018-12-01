@@ -19,15 +19,12 @@ public class Main extends Application {
 
         Parent root = loader.load();
 
-        Controller controller = loader.getController();
-        Guice.createInjector().injectMembers(controller);
-        controller.setStage(primaryStage);
-        loader.setController(controller);
-
         primaryStage.setTitle("Tornbjorns' Ogonki");
         primaryStage.setScene(new Scene(root, Controller.BASE_WIDTH, Controller.BASE_HEIGHT));
         primaryStage.show();
 
+        Controller controller = loader.getController();
+        Guice.createInjector().injectMembers(controller);
         controller.lateInitialize();
     }
 

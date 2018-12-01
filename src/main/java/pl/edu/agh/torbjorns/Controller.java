@@ -2,8 +2,6 @@ package pl.edu.agh.torbjorns;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import lombok.Setter;
 import pl.edu.agh.torbjorns.board.Board;
 import pl.edu.agh.torbjorns.board.BoardFactory;
 import pl.edu.agh.torbjorns.board.deck.DeckFactory;
@@ -26,9 +24,6 @@ public class Controller {
     @FXML
     private GridPane rightGrid;
 
-    @Setter
-    private Stage stage;
-
     @Inject
     private DeckFactory deckFactory;
 
@@ -38,6 +33,11 @@ public class Controller {
     private Board board;
 
     public void lateInitialize() {
+        mainGrid.setMinWidth(BASE_WIDTH);
+        mainGrid.setMaxWidth(BASE_WIDTH);
+        mainGrid.setMinHeight(BASE_HEIGHT);
+        mainGrid.setMaxHeight(BASE_HEIGHT);
+
         var deck = deckFactory.createDeck();
         board = boardFactory.createBoard(deck);
 
