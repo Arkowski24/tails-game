@@ -2,6 +2,7 @@ package pl.edu.agh.torbjorns.view;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import pl.edu.agh.torbjorns.board.FinishedCardStack;
@@ -10,8 +11,7 @@ import java.io.IOException;
 
 public class FinishedCardStackControl extends StackPane {
 
-    private static final double WIDTH = 1.08 * CardControl.CARD_WIDTH;
-    private static final double HEIGHT = CardControl.CARD_HEIGHT + 0.08 * CardControl.CARD_WIDTH;
+    private final static double PADDING = 0.05 * CardControl.CARD_WIDTH;
 
     private final FinishedCardStack cardStack;
 
@@ -38,10 +38,7 @@ public class FinishedCardStackControl extends StackPane {
     }
 
     private void initializeDimensions() {
-        setMinWidth(WIDTH);
-        setMaxWidth(WIDTH);
-        setMinHeight(HEIGHT);
-        setMaxHeight(HEIGHT);
+        setPadding(new Insets(PADDING));
     }
 
     private void initializeSuitLabel() {

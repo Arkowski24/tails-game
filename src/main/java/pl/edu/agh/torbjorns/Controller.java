@@ -1,10 +1,13 @@
 package pl.edu.agh.torbjorns;
 
 import javafx.fxml.FXML;
+import javafx.geometry.VPos;
 import javafx.scene.layout.GridPane;
 import pl.edu.agh.torbjorns.board.Board;
 import pl.edu.agh.torbjorns.board.BoardFactory;
+import pl.edu.agh.torbjorns.board.BufferZone;
 import pl.edu.agh.torbjorns.board.deck.DeckFactory;
+import pl.edu.agh.torbjorns.view.CardPlaceholderControl;
 import pl.edu.agh.torbjorns.view.FinishedCardStackControl;
 import pl.edu.agh.torbjorns.view.WorkingCardStackControl;
 
@@ -18,12 +21,6 @@ public class Controller {
     @FXML
     private GridPane mainGrid;
 
-    @FXML
-    private GridPane leftGrid;
-
-    @FXML
-    private GridPane rightGrid;
-
     @Inject
     private DeckFactory deckFactory;
 
@@ -33,23 +30,19 @@ public class Controller {
     private Board board;
 
     public void lateInitialize() {
-        mainGrid.setMinWidth(BASE_WIDTH);
-        mainGrid.setMaxWidth(BASE_WIDTH);
-        mainGrid.setMinHeight(BASE_HEIGHT);
-        mainGrid.setMaxHeight(BASE_HEIGHT);
-
         var deck = deckFactory.createDeck();
         board = boardFactory.createBoard(deck);
 
         initializeFinishedCardStacks();
         initializeWorkingCardStacks();
+        initializeBufferZone();
     }
 
     private void initializeFinishedCardStacks() {
         var column = 0;
         for (var stack : board.getFinishedCardStacks()) {
             var stackControl = new FinishedCardStackControl(stack);
-            leftGrid.add(stackControl, column, 0);
+            mainGrid.add(stackControl, column, 0);
             column++;
         }
     }
@@ -58,8 +51,17 @@ public class Controller {
         var column = 0;
         for (var stack : board.getWorkingCardStacks()) {
             var stackControl = new WorkingCardStackControl(stack);
-            leftGrid.add(stackControl, column, 1);
+            GridPane.setValignment(stackControl, VPos.TOP);
+            mainGrid.add(stackControl, column, 1, 1, 4);
             column++;
+        }
+    }
+
+    private void initializeBufferZone() {
+        for (var i = 0; i < BufferZone.SIZE; i++) {
+            var column = (i % 2) + 8;
+            var row = i / 2;
+            mainGrid.add(new CardPlaceholderControl(), column, row);
         }
     }
 
