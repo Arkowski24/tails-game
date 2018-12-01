@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import pl.edu.agh.torbjorns.board.deck.Deck;
 import pl.edu.agh.torbjorns.card.Suit;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class BoardFactory {
 
     private static final int WORKING_CARD_STACK_COUNT = 8;

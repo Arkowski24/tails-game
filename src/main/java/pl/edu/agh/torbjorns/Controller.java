@@ -1,5 +1,6 @@
 package pl.edu.agh.torbjorns;
 
+import com.google.inject.Guice;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -7,9 +8,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import pl.edu.agh.torbjorns.board.Board;
 import pl.edu.agh.torbjorns.board.BoardFactory;
-import pl.edu.agh.torbjorns.board.Dealer;
 import pl.edu.agh.torbjorns.board.deck.DeckFactory;
 import pl.edu.agh.torbjorns.card.Card;
+
+import javax.inject.Inject;
 
 public class Controller {
 
@@ -19,14 +21,17 @@ public class Controller {
     @FXML
     GridPane bufferGrid;
 
-    // TODO(pjanczyk): extract object initialization to Guice module
-    private final Dealer dealer = new Dealer();
-    private final BoardFactory boardFactory = new BoardFactory(dealer);
-    private final DeckFactory deckFactory = new DeckFactory();
+    @Inject
+    private DeckFactory deckFactory;
+
+    @Inject
+    private BoardFactory boardFactory;
 
     private Board board;
 
     public void initialize() {
+        Guice.createInjector().injectMembers(this);
+
         var deck = deckFactory.createDeck();
         board = boardFactory.createBoard(deck);
 
