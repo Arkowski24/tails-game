@@ -1,13 +1,11 @@
 package pl.edu.agh.torbjorns.view;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import pl.edu.agh.torbjorns.board.FinishedCardStack;
-
-import java.io.IOException;
+import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
 public class FinishedCardStackControl extends StackPane {
 
@@ -21,20 +19,9 @@ public class FinishedCardStackControl extends StackPane {
     public FinishedCardStackControl(FinishedCardStack cardStack) {
         this.cardStack = cardStack;
 
-        loadFxml();
+        ControlUtils.loadFxml(this);
         initializeDimensions();
         initializeSuitLabel();
-    }
-
-    private void loadFxml() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("finished-card-stack.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
     }
 
     private void initializeDimensions() {

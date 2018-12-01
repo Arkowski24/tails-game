@@ -1,26 +1,13 @@
 package pl.edu.agh.torbjorns.view;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.StackPane;
-
-import java.io.IOException;
+import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
 public class CardPlaceholderControl extends StackPane {
 
     public CardPlaceholderControl() {
-        loadFxml();
+        ControlUtils.loadFxml(this);
         initializeDimensions();
-    }
-
-    private void loadFxml() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("card-placeholder.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
     }
 
     private void initializeDimensions() {

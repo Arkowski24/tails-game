@@ -3,13 +3,11 @@ package pl.edu.agh.torbjorns.view;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import pl.edu.agh.torbjorns.card.Card;
-
-import java.io.IOException;
+import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
 import static javafx.beans.binding.Bindings.*;
 
@@ -30,20 +28,9 @@ public class CardControl extends AnchorPane {
     private Label bottomRightLabel;
 
     public CardControl() {
-        loadFxml();
+        ControlUtils.loadFxml(this);
         initializeDimensions();
         initializeLabels();
-    }
-
-    private void loadFxml() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("card.fxml"));
-        loader.setRoot(this);
-        loader.setController(this);
-        try {
-            loader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
     }
 
     private void initializeDimensions() {
