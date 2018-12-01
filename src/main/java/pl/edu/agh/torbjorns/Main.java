@@ -1,5 +1,6 @@
 package pl.edu.agh.torbjorns;
 
+import com.google.inject.Guice;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,10 +15,20 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/pl/edu/agh/torbjorns/application.fxml"));
+        var loader = new FXMLLoader(getClass().getResource("/pl/edu/agh/torbjorns/application.fxml"));
+
+        Parent root = loader.load();
+
+        Controller controller = loader.getController();
+        Guice.createInjector().injectMembers(controller);
+        controller.setStage(primaryStage);
+        loader.setController(controller);
+
         primaryStage.setTitle("Tornbjorns' Ogonki");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, Controller.BASE_WIDTH, Controller.BASE_HEIGHT));
         primaryStage.show();
+
+        controller.lateInitialize();
     }
 
 }

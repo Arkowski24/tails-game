@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public enum Suit {
-    CLUBS(Color.BLACK),
-    DIAMONDS(Color.RED),
-    HEARTS(Color.RED),
-    SPADES(Color.BLACK);
+    SPADES(Color.BLACK, "♠"),
+    HEARTS(Color.RED, "♥"),
+    DIAMONDS(Color.RED, "♦"),
+    CLUBS(Color.BLACK, "♣");
 
-    @Getter
     private final Color color;
+    private final String symbolText;
 }

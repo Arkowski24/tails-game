@@ -6,66 +6,88 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import pl.edu.agh.torbjorns.card.Card;
-import pl.edu.agh.torbjorns.card.Color;
-import pl.edu.agh.torbjorns.card.Rank;
-import pl.edu.agh.torbjorns.card.Suit;
 
 import java.io.IOException;
-import java.util.Map;
 
 import static javafx.beans.binding.Bindings.*;
 
 public class CardControl extends AnchorPane {
 
-    private static final Map<Suit, String> SUIT_TEXTS = Map.of(
-            Suit.SPADES, "♠",
-            Suit.HEARTS, "♥",
-            Suit.DIAMONDS, "♦",
-            Suit.CLUBS, "♣"
-    );
-
-    private static final Map<Rank, String> RANK_TEXTS = Map.ofEntries(
-            Map.entry(Rank.ACE, "A"),
-            Map.entry(Rank.TWO, "2"),
-            Map.entry(Rank.THREE, "3"),
-            Map.entry(Rank.FOUR, "4"),
-            Map.entry(Rank.FIVE, "5"),
-            Map.entry(Rank.SIX, "6"),
-            Map.entry(Rank.SEVEN, "7"),
-            Map.entry(Rank.EIGHT, "8"),
-            Map.entry(Rank.NINE, "9"),
-            Map.entry(Rank.TEN, "10"),
-            Map.entry(Rank.JACK, "J"),
-            Map.entry(Rank.QUEEN, "Q"),
-            Map.entry(Rank.KING, "K")
-    );
+    public final static double CARD_WIDTH = 110;
+    public final static double CARD_HEIGHT = 1.5 * CARD_WIDTH;
 
     private final Property<Card> cardProperty = new SimpleObjectProperty<>();
 
     @FXML
-    private Label label;
+    private Label topLeftLabel;
+
+    @FXML
+    private Label centerLabel;
+
+    @FXML
+    private Label bottomRightLabel;
 
     public CardControl() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("card.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
+        loadFxml();
+        initializeDimensions();
+        initializeLabels();
+    }
 
+    private void loadFxml() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("card.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
         try {
-            fxmlLoader.load();
+            loader.load();
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+    }
 
-        label.textProperty()
-                .bind(createStringBinding(
-                        () -> computeLabelText(getCard()),
-                        cardProperty));
+    private void initializeDimensions() {
+        setMinWidth(CARD_WIDTH);
+        setMaxWidth(CARD_WIDTH);
+        setMinHeight(CARD_HEIGHT);
+        setMaxHeight(CARD_HEIGHT);
+    }
 
-        label.textFillProperty()
-                .bind(createObjectBinding(
-                        () -> computeLabelTextFill(getCard()),
-                        cardProperty));
+    private void initializeLabels() {
+        var labelColorBinding = createObjectBinding(this::getLabelColor, cardProperty);
+
+        topLeftLabel.textProperty().bind(createStringBinding(this::getTopLeftLabelText, cardProperty));
+        topLeftLabel.textFillProperty().bind(labelColorBinding);
+
+        centerLabel.textProperty().bind(createStringBinding(this::getCenterLabelText, cardProperty));
+        centerLabel.textFillProperty().bind(labelColorBinding);
+
+        bottomRightLabel.textProperty().bind(createStringBinding(this::getBottomRightLabelText, cardProperty));
+        bottomRightLabel.textFillProperty().bind(labelColorBinding);
+    }
+
+    private String getTopLeftLabelText() {
+        var card = getCard();
+        if (card == null) return "";
+        return card.getRank().getShortText() + " " + card.getSuit().getSymbolText();
+    }
+
+    private String getCenterLabelText() {
+        var card = getCard();
+        if (card == null) return "";
+        return card.getSuit().getSymbolText();
+    }
+
+    private String getBottomRightLabelText() {
+        var card = getCard();
+        if (card == null) return "";
+        return card.getSuit().getSymbolText() + " " + card.getRank().getShortText();
+    }
+
+    private Color getLabelColor() {
+        var card = getCard();
+        if (card == null) return null;
+        return card.getColor().getFxColor();
     }
 
     public Property<Card> cardProperty() {
@@ -78,22 +100,6 @@ public class CardControl extends AnchorPane {
 
     public void setCard(Card card) {
         cardProperty.setValue(card);
-    }
-
-    private String computeLabelText(Card card) {
-        if (card != null) {
-            return RANK_TEXTS.get(card.getRank()) + " " + SUIT_TEXTS.get(card.getSuit());
-        } else {
-            return "";
-        }
-    }
-
-    private javafx.scene.paint.Color computeLabelTextFill(Card card) {
-        if (card != null && card.getColor() == Color.RED) {
-            return javafx.scene.paint.Color.RED;
-        } else {
-            return javafx.scene.paint.Color.BLACK;
-        }
     }
 
 }
