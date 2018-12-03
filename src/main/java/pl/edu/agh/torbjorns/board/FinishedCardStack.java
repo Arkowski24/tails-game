@@ -1,5 +1,6 @@
 package pl.edu.agh.torbjorns.board;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import pl.edu.agh.torbjorns.card.Card;
 import pl.edu.agh.torbjorns.card.Rank;
@@ -8,6 +9,7 @@ import pl.edu.agh.torbjorns.card.Suit;
 @RequiredArgsConstructor
 public class FinishedCardStack extends CardStack {
 
+    @Getter
     private final Suit suit;
 
     @Override

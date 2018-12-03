@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import pl.edu.agh.torbjorns.board.deck.Deck;
 import pl.edu.agh.torbjorns.card.Suit;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class BoardFactory {
 
     private static final int WORKING_CARD_STACK_COUNT = 8;
@@ -21,7 +22,7 @@ public class BoardFactory {
     private final Dealer dealer;
 
     public Board createBoard(Deck deck) {
-        List<CardStack> finishedCardStacks =
+        var finishedCardStacks =
                 Stream.of(FINISHED_CARD_STACK_SUITS)
                         .map(FinishedCardStack::new)
                         .collect(toUnmodifiableList());

@@ -1,0 +1,28 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<fx:root type="javafx.scene.layout.AnchorPane" xmlns:fx="http://javafx.com/fxml"
+         style="
+            -fx-background-color: #eee;
+            -fx-background-radius: 8;
+            -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
+            ">
+
+    <Label fx:id="topLeftLabel"
+           style="-fx-font-size: 14"
+           AnchorPane.topAnchor="5"
+           AnchorPane.leftAnchor="10"/>
+
+    <Label fx:id="bottomRightLabel"
+           style="-fx-font-size: 14"
+           AnchorPane.bottomAnchor="5"
+           AnchorPane.rightAnchor="10"/>
+
+    <Label fx:id="centerLabel"
+           style="-fx-font-size: 50"
+           AnchorPane.topAnchor="0"
+           AnchorPane.rightAnchor="0"
+           AnchorPane.bottomAnchor="0"
+           AnchorPane.leftAnchor="0"
+           alignment="CENTER"/>
+
+</fx:root>
