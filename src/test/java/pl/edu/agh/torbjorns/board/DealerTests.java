@@ -17,18 +17,15 @@ public class DealerTests {
         //  Given
         Dealer dealer = new Dealer();
         Deck deck = new DeckFactory().createDeck();
-        Board board = new BoardFactory(dealer).createBoard(deck);
+        Board board;
 
         //  When
-        dealer.dealCards(board, deck);
-
-        System.out.println(board.getWorkingCardStacks().size());
+        board = new BoardFactory(dealer).createBoard(deck);
 
         //  Then
         for(int i = 0; i < board.getWorkingCardStacks().size(); i++){
-            System.out.println(board.getWorkingCardStacks().get(i).isEmpty());
-            //Card topCard = board.getWorkingCardStacks().get(i).getTopCard();
-            //assertThat(topCard.getRank()).isEqualTo(Rank.KING);
+            Card bottomCard = board.getWorkingCardStacks().get(i).getCards().get(0);
+            assertThat(bottomCard.getRank()).isEqualTo(Rank.KING);
         }
     }
 

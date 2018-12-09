@@ -45,7 +45,6 @@ public class Dealer {
         }
 
         private void completeCurrentStack() {
-            System.out.println(currentStack.size());
             board.getWorkingCardStacks().get(currentStackIndex).setCards(currentStack);
             currentStackIndex++;
             currentStack = new ArrayDeque<>();
