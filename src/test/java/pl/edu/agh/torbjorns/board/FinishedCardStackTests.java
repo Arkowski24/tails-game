@@ -14,9 +14,11 @@ public class FinishedCardStackTests {
 
         //  Given
         FinishedCardStack finishedCardStackSmall = new FinishedCardStack(Suit.DIAMONDS);
+        FinishedCardStack finishedCardStackBig = new FinishedCardStack(Suit.CLUBS);
+
+        //  When
         finishedCardStackSmall.putCard(new Card(Rank.ACE, Suit.DIAMONDS));
 
-        FinishedCardStack finishedCardStackBig = new FinishedCardStack(Suit.CLUBS);
         finishedCardStackBig.putCard(new Card(Rank.ACE, Suit.CLUBS));
         finishedCardStackBig.putCard(new Card(Rank.TWO, Suit.CLUBS));
         finishedCardStackBig.putCard(new Card(Rank.THREE, Suit.CLUBS));
@@ -25,8 +27,6 @@ public class FinishedCardStackTests {
         finishedCardStackBig.putCard(new Card(Rank.SIX, Suit.CLUBS));
         finishedCardStackBig.putCard(new Card(Rank.SEVEN, Suit.CLUBS));
         finishedCardStackBig.putCard(new Card(Rank.EIGHT, Suit.CLUBS));
-
-        //  When
 
         //  Then
         assertThat(finishedCardStackSmall.canPutCard(new Card(Rank.TWO, Suit.DIAMONDS))).isEqualTo(true);
