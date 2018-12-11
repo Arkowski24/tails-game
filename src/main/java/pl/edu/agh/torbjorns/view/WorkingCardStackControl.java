@@ -10,10 +10,12 @@ import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.board.CardStack;
 import pl.edu.agh.torbjorns.card.Card;
 
+import static javafx.beans.binding.Bindings.*;
+
 public class WorkingCardStackControl extends VBox implements CardControlManager {
 
-    private final static double SPACING = -0.85 * CardControl.CARD_HEIGHT;
-    private final static double PADDING_TOP = 0.05 * CardControl.CARD_WIDTH;
+    private final static double MAX_SPACING = -0.85 * CardControl.CARD_HEIGHT;
+    private final static double PADDING_VERTICAL = 0.05 * CardControl.CARD_WIDTH;
 
     private final CardStack cardStack;
 
@@ -21,15 +23,28 @@ public class WorkingCardStackControl extends VBox implements CardControlManager 
 
     public WorkingCardStackControl(CardStack cardStack, Controller controller) {
         this.cardStack = cardStack;
-
-        setAlignment(Pos.TOP_CENTER);
-        setSpacing(SPACING);
-        setPadding(new Insets(PADDING_TOP, 0, 0, 0));
-
         this.controller = controller;
+
+        setMinHeight(0);
+        setPadding(new Insets(PADDING_VERTICAL, 0, PADDING_VERTICAL, 0));
+        setAlignment(Pos.TOP_CENTER);
+        spacingProperty().bind(
+                createDoubleBinding(this::calculateSpacing, getChildren(), heightProperty()));
+
         initializeCards();
         attachListener();
         this.setOnMouseClicked(this::onClickAction);
+    }
+
+    private double calculateSpacing() {
+        var cardCount = getChildren().size();
+        double freeSpace = getHeight() - 2 * PADDING_VERTICAL - cardCount * CardControl.CARD_HEIGHT;
+        if (freeSpace >= 0) {
+            return MAX_SPACING;
+        } else {
+            double spacing = freeSpace / (cardCount - 1);
+            return Math.min(spacing, MAX_SPACING);
+        }
     }
 
     private void onClickAction(MouseEvent event) {
