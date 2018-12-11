@@ -1,16 +1,12 @@
 package pl.edu.agh.torbjorns.board;
 
-import lombok.RequiredArgsConstructor;
-import pl.edu.agh.torbjorns.board.deck.Deck;
 import pl.edu.agh.torbjorns.card.Suit;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
 
-@RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class BoardFactory {
 
     private static final int WORKING_CARD_STACK_COUNT = 8;
@@ -19,9 +15,7 @@ public class BoardFactory {
             Suit.HEARTS, Suit.DIAMONDS, Suit.SPADES, Suit.CLUBS
     };
 
-    private final Dealer dealer;
-
-    public Board createBoard(Deck deck) {
+    public Board createBoard() {
         var finishedCardStacks =
                 Stream.of(FINISHED_CARD_STACK_SUITS)
                         .map(FinishedCardStack::new)
@@ -34,11 +28,7 @@ public class BoardFactory {
 
         var bufferZone = new BufferZone();
 
-        var board = new Board(finishedCardStacks, workingCardStacks, bufferZone);
-
-        dealer.dealCards(board, deck);
-
-        return board;
+        return new Board(finishedCardStacks, workingCardStacks, bufferZone);
     }
 
 }
