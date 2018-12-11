@@ -25,6 +25,7 @@ public class WorkingCardStackControl extends VBox implements CardControlManager 
         this.cardStack = cardStack;
         this.controller = controller;
 
+        getStyleClass().add("working-card-stack");
         setMinHeight(0);
         setPadding(new Insets(PADDING_VERTICAL, 0, PADDING_VERTICAL, 0));
         setAlignment(Pos.TOP_CENTER);
@@ -66,10 +67,9 @@ public class WorkingCardStackControl extends VBox implements CardControlManager 
 
     private void updateOnSelect(CardControl newCardControl) {
         if (newCardControl != null && cardStack.canPutCard(newCardControl.getCard())) {
-            this.setBorder(new Border(new BorderStroke(Color.RED,
-                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            getStyleClass().add("target");
         } else {
-            this.setBorder(null);
+            getStyleClass().remove("target");
         }
     }
 

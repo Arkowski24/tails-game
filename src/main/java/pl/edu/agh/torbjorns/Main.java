@@ -19,8 +19,11 @@ public class Main extends Application {
 
         Parent root = loader.load();
 
+        var scene = new Scene(root, Controller.BASE_WIDTH, Controller.BASE_HEIGHT);
+        scene.getStylesheets().add("/pl/edu/agh/torbjorns/styles.css");
+
         primaryStage.setTitle("Tornbjorns' Ogonki");
-        primaryStage.setScene(new Scene(root, Controller.BASE_WIDTH, Controller.BASE_HEIGHT));
+        primaryStage.setScene(scene);
         primaryStage.show();
 
         Controller controller = loader.getController();

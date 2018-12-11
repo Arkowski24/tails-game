@@ -1,11 +1,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.AnchorPane" xmlns:fx="http://javafx.com/fxml"
-         style="
-            -fx-background-color: #eee;
-            -fx-background-radius: 8;
-            -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
-            ">
+         styleClass="card">
 
     <Label fx:id="topLeftLabel"
            style="-fx-font-size: 14"

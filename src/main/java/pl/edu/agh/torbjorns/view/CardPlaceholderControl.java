@@ -2,8 +2,7 @@ package pl.edu.agh.torbjorns.view;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.StackPane;
 import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
@@ -39,11 +38,9 @@ public class CardPlaceholderControl extends StackPane implements CardControlMana
 
     private void updateOnSelect(CardControl cardControl) {
         if (canPutCard(cardControl) && cardControl != null) {
-            this.setBorder(new Border(new BorderStroke(Color.RED,
-                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            getStyleClass().add("target");
         } else {
-            this.setBorder(new Border(new BorderStroke(Color.BLACK,
-                    BorderStrokeStyle.DASHED, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            getStyleClass().remove("target");
         }
     }
 

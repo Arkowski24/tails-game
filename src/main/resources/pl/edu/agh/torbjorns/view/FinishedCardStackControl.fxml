@@ -1,7 +1,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.StackPane?>
 <?import pl.edu.agh.torbjorns.view.CardPlaceholderControl?>
-<fx:root type="javafx.scene.layout.StackPane" xmlns:fx="http://javafx.com/fxml">
+<fx:root type="javafx.scene.layout.StackPane" xmlns:fx="http://javafx.com/fxml"
+    styleClass="finished-card-stack">
 
     <CardPlaceholderControl/>
 

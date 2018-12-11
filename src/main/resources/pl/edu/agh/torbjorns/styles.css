@@ -1,0 +1,34 @@
+.card {
+    -fx-background-color: #eee;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-border-width: 3;
+    -fx-border-radius: 8;
+    -fx-border-insets: -1;
+    -fx-border-style: solid;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 0);
+}
+
+.card.selected {
+    -fx-border-color: blue;
+}
+
+.card-placeholder {
+    -fx-border-width: 2, 4;
+    -fx-border-radius: 8, 8;
+    -fx-border-color: rgba(0, 0, 0, 0.3), transparent;
+    -fx-border-style: segments(5, 5) line-cap round, segments(5, 5) line-cap round;
+}
+
+.working-card-stack {
+    -fx-border-width: 4;
+    -fx-border-radius: 8;
+    -fx-border-color: transparent;
+    -fx-border-style: segments(5, 5) line-cap round;
+}
+
+.card-placeholder.target,
+.working-card-stack.target,
+.finished-card-stack.target .card-placeholder {
+    -fx-border-color: transparent, rgba(255, 0, 0, 0.8);
+}

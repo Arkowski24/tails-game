@@ -4,13 +4,12 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import pl.edu.agh.torbjorns.card.Card;
 import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
-import static javafx.beans.binding.Bindings.createObjectBinding;
-import static javafx.beans.binding.Bindings.createStringBinding;
+import static javafx.beans.binding.Bindings.*;
 
 public class CardControl extends AnchorPane {
 
@@ -91,11 +90,10 @@ public class CardControl extends AnchorPane {
     }
 
     public void setSelected() {
-        this.setBorder(new Border(new BorderStroke(Color.BLUE,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        getStyleClass().add("selected");
     }
 
     public void setUnselected() {
-        this.setBorder(null);
+        getStyleClass().remove("selected");
     }
 }
