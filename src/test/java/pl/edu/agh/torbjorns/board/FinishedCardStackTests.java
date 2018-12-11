@@ -10,15 +10,27 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class FinishedCardStackTests {
 
     @Test
-    void canPutCardTest(){
+    void canPutCardTestSmallStack(){
 
         //  Given
         FinishedCardStack finishedCardStackSmall = new FinishedCardStack(Suit.DIAMONDS);
-        FinishedCardStack finishedCardStackBig = new FinishedCardStack(Suit.CLUBS);
 
         //  When
         finishedCardStackSmall.putCard(new Card(Rank.ACE, Suit.DIAMONDS));
 
+        //  Then
+        assertThat(finishedCardStackSmall.canPutCard(new Card(Rank.TWO, Suit.DIAMONDS))).isEqualTo(true);
+        assertThat(finishedCardStackSmall.canPutCard(new Card(Rank.THREE, Suit.DIAMONDS))).isEqualTo(false);
+        assertThat(finishedCardStackSmall.canPutCard(new Card(Rank.TWO, Suit.CLUBS))).isEqualTo(false);
+    }
+
+    @Test
+    void canPutCardTestBigStack(){
+
+        //  Given
+        FinishedCardStack finishedCardStackBig = new FinishedCardStack(Suit.CLUBS);
+
+        //  When
         finishedCardStackBig.putCard(new Card(Rank.ACE, Suit.CLUBS));
         finishedCardStackBig.putCard(new Card(Rank.TWO, Suit.CLUBS));
         finishedCardStackBig.putCard(new Card(Rank.THREE, Suit.CLUBS));
@@ -29,10 +41,6 @@ public class FinishedCardStackTests {
         finishedCardStackBig.putCard(new Card(Rank.EIGHT, Suit.CLUBS));
 
         //  Then
-        assertThat(finishedCardStackSmall.canPutCard(new Card(Rank.TWO, Suit.DIAMONDS))).isEqualTo(true);
-        assertThat(finishedCardStackSmall.canPutCard(new Card(Rank.THREE, Suit.DIAMONDS))).isEqualTo(false);
-        assertThat(finishedCardStackSmall.canPutCard(new Card(Rank.TWO, Suit.CLUBS))).isEqualTo(false);
-
         assertThat(finishedCardStackBig.canPutCard(new Card(Rank.NINE, Suit.CLUBS))).isEqualTo(true);
         assertThat(finishedCardStackBig.canPutCard(new Card(Rank.SIX, Suit.CLUBS))).isEqualTo(false);
         assertThat(finishedCardStackBig.canPutCard(new Card(Rank.TWO, Suit.CLUBS))).isEqualTo(false);
