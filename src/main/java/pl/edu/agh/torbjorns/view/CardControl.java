@@ -4,12 +4,15 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.card.Card;
 import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
-import static javafx.beans.binding.Bindings.*;
+import static javafx.beans.binding.Bindings.createObjectBinding;
+import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class CardControl extends AnchorPane {
 
@@ -17,6 +20,8 @@ public class CardControl extends AnchorPane {
     public final static double CARD_HEIGHT = 1.5 * CARD_WIDTH;
 
     private final Property<Card> cardProperty = new SimpleObjectProperty<>();
+
+    private Controller controller;
 
     @FXML
     private Label topLeftLabel;
@@ -27,10 +32,29 @@ public class CardControl extends AnchorPane {
     @FXML
     private Label bottomRightLabel;
 
-    public CardControl() {
+    public CardControl(Controller controller) {
         ControlUtils.loadFxml(this);
         initializeDimensions();
         initializeLabels();
+
+        this.controller = controller;
+        this.setOnMouseClicked(this::onClickAction);
+    }
+
+    public void onClickAction(MouseEvent event) {
+        controller.clickedOnCard(this);
+    }
+
+    public Property<Card> cardProperty() {
+        return cardProperty;
+    }
+
+    public Card getCard() {
+        return cardProperty.getValue();
+    }
+
+    public void setCard(Card card) {
+        cardProperty.setValue(card);
     }
 
     private void initializeDimensions() {
@@ -75,18 +99,6 @@ public class CardControl extends AnchorPane {
         var card = getCard();
         if (card == null) return null;
         return card.getColor().getFxColor();
-    }
-
-    public Property<Card> cardProperty() {
-        return cardProperty;
-    }
-
-    public Card getCard() {
-        return cardProperty.getValue();
-    }
-
-    public void setCard(Card card) {
-        cardProperty.setValue(card);
     }
 
 }
