@@ -10,7 +10,7 @@ import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.board.CardStack;
 import pl.edu.agh.torbjorns.card.Card;
 
-public class WorkingCardStackControl extends VBox implements StackControl {
+public class WorkingCardStackControl extends VBox implements CardControlManager {
 
     private final static double SPACING = -0.85 * CardControl.CARD_HEIGHT;
     private final static double PADDING_TOP = 0.05 * CardControl.CARD_WIDTH;
@@ -33,29 +33,15 @@ public class WorkingCardStackControl extends VBox implements StackControl {
     }
 
     private void onClickAction(MouseEvent event) {
-        controller.clickedOnCardStack(this);
-    }
-
-    @Override
-    public CardControl getTopCardControl() {
-        return (CardControl) getChildren().get(getChildren().size() - 1);
-    }
-
-    @Override
-    public CardStack getCardStack() {
-        return cardStack;
+        controller.clickedOnCardManager(this);
     }
 
     private void initializeCards() {
         for (Card card : cardStack.getCards()) {
-            createCardControlOnTop(card);
+            CardControl cardControl = new CardControl();
+            cardControl.setCard(card);
+            getChildren().add(cardControl);
         }
-    }
-
-    private void createCardControlOnTop(Card card) {
-        CardControl cardControl = new CardControl();
-        cardControl.setCard(card);
-        getChildren().add(cardControl);
     }
 
     private void attachListener() {
@@ -75,7 +61,7 @@ public class WorkingCardStackControl extends VBox implements StackControl {
     @Override
     public void addCard(CardControl cardControl) {
         Card card = cardControl.getCard();
-        createCardControlOnTop(card);
+        getChildren().add(cardControl);
         cardStack.putCard(card);
     }
 
@@ -83,5 +69,23 @@ public class WorkingCardStackControl extends VBox implements StackControl {
     public void removeCard(CardControl cardControl) {
         getChildren().remove(cardControl);
         cardStack.removeCard();
+    }
+
+    @Override
+    public CardControl getTopCard() {
+        if (getChildren().size() == 0) {
+            return null;
+        }
+        return (CardControl) getChildren().get(getChildren().size() - 1);
+    }
+
+    @Override
+    public boolean canPutCard(CardControl cardControl) {
+        if (cardControl == null) {
+            return false;
+        }
+
+        var card = cardControl.getCard();
+        return cardStack.canPutCard(card);
     }
 }

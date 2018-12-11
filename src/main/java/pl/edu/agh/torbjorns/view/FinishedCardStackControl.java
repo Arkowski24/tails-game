@@ -8,12 +8,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import pl.edu.agh.torbjorns.Controller;
-import pl.edu.agh.torbjorns.board.CardStack;
 import pl.edu.agh.torbjorns.board.FinishedCardStack;
 import pl.edu.agh.torbjorns.card.Card;
 import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
-public class FinishedCardStackControl extends StackPane implements StackControl {
+public class FinishedCardStackControl extends StackPane implements CardControlManager {
 
     private final static double PADDING = 0.05 * CardControl.CARD_WIDTH;
 
@@ -37,7 +36,7 @@ public class FinishedCardStackControl extends StackPane implements StackControl 
     }
 
     private void onClickAction(MouseEvent event) {
-        controller.clickedOnCardStack(this);
+        controller.clickedOnCardManager(this);
     }
 
     private void initializeDimensions() {
@@ -79,16 +78,20 @@ public class FinishedCardStackControl extends StackPane implements StackControl 
     }
 
     @Override
-    public CardControl getTopCardControl() {
+    public CardControl getTopCard() {
         if (getChildren().size() == 0) {
             return null;
         }
-
         return (CardControl) getChildren().get(getChildren().size() - 1);
     }
 
     @Override
-    public CardStack getCardStack() {
-        return cardStack;
+    public boolean canPutCard(CardControl cardControl) {
+        if (cardControl == null) {
+            return false;
+        }
+
+        var card = cardControl.getCard();
+        return cardStack.canPutCard(card);
     }
 }

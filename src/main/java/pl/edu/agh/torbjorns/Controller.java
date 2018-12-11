@@ -16,7 +16,10 @@ public class Controller {
 
     public static final double BASE_WIDTH = 1280.0;
     public static final double BASE_HEIGHT = 720.0;
+
     private final ObjectProperty<CardControl> selectedCardControl;
+    private CardControlManager selectedCardControlManager;
+
     @FXML
     private GridPane mainGrid;
     @Inject
@@ -61,48 +64,40 @@ public class Controller {
         for (var i = 0; i < BufferZone.SIZE; i++) {
             var column = (i % 2) + 8;
             var row = i / 2;
-            mainGrid.add(new CardPlaceholderControl(), column, row);
+            var placeholder = new CardPlaceholderControl();
+            mainGrid.add(placeholder, column, row);
+            placeholder.setController(this);
         }
     }
 
-    public void clickedOnCardStack(StackControl stackControl) {
-        if (stackControl.getTopCardControl() == selectedCardControl.get()) {
+    public void clickedOnCardManager(CardControlManager cardManager) {
+        if (cardManager == selectedCardControlManager) {
             return;
         }
 
         if (selectedCardControl.get() == null) {
-            var topCardControl = stackControl.getTopCardControl();
+            var topCardControl = cardManager.getTopCard();
             selectedCardControl.setValue(topCardControl);
+            selectedCardControlManager = cardManager;
             topCardControl.setSelected();
         } else {
-            if (stackControl.getCardStack().canPutCard(selectedCardControl.get().getCard())) {
-                moveSelectedCard(stackControl);
-            } else {
-                selectedCardControl.get().setUnselected();
-                selectedCardControl.setValue(null);
+            var selectedCard = selectedCardControl.get();
+            if (cardManager.canPutCard(selectedCard)) {
+                selectedCardControlManager.removeCard(selectedCard);
+                cardManager.addCard(selectedCard);
             }
-
+            deselectSelectedCard();
         }
-    }
-
-    public void clickedOnBufferZone(CardPlaceholderControl placeholder) {
-
-    }
-
-    private void moveSelectedCard(StackControl newStack) {
-        if (this.selectedCardControl.get() == null) {
-            return;
-        }
-
-        var selectedCardControl = this.selectedCardControl.get();
-        var oldStack = (StackControl) this.selectedCardControl.get().getParent();
-
-        oldStack.removeCard(selectedCardControl);
-        newStack.addCard(selectedCardControl);
-        this.selectedCardControl.setValue(null);
     }
 
     public ObjectProperty<CardControl> selectedCardControlProperty() {
         return selectedCardControl;
+    }
+
+    private void deselectSelectedCard() {
+        CardControl cardControl = this.selectedCardControl.get();
+        cardControl.setUnselected();
+        selectedCardControl.setValue(null);
+        selectedCardControlManager = null;
     }
 }
