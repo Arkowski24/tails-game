@@ -1,8 +1,16 @@
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.*?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="pl.edu.agh.torbjorns.Controller"
           fx:id="mainGrid"
-          alignment="CENTER"
+          alignment="TOP_CENTER"
           hgap="5"
           vgap="5"
-          style="-fx-background-color: #0C7B2F;"/>
+          style="-fx-background-color: #0C7B2F;">
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
+</GridPane>

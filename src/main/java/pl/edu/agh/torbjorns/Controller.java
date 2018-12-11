@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import pl.edu.agh.torbjorns.board.Board;
 import pl.edu.agh.torbjorns.board.BoardFactory;
 import pl.edu.agh.torbjorns.board.BufferZone;
@@ -55,6 +56,7 @@ public class Controller {
         for (var stack : board.getWorkingCardStacks()) {
             var stackControl = new WorkingCardStackControl(stack, this);
             GridPane.setValignment(stackControl, VPos.TOP);
+            GridPane.setVgrow(stackControl, Priority.ALWAYS);
             mainGrid.add(stackControl, column, 1, 1, 4);
             column++;
         }
