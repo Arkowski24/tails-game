@@ -4,12 +4,13 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import pl.edu.agh.torbjorns.card.Card;
 import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
-import static javafx.beans.binding.Bindings.*;
+import static javafx.beans.binding.Bindings.createObjectBinding;
+import static javafx.beans.binding.Bindings.createStringBinding;
 
 public class CardControl extends AnchorPane {
 
@@ -31,6 +32,18 @@ public class CardControl extends AnchorPane {
         ControlUtils.loadFxml(this);
         initializeDimensions();
         initializeLabels();
+    }
+
+    public Property<Card> cardProperty() {
+        return cardProperty;
+    }
+
+    public Card getCard() {
+        return cardProperty.getValue();
+    }
+
+    public void setCard(Card card) {
+        cardProperty.setValue(card);
     }
 
     private void initializeDimensions() {
@@ -77,16 +90,12 @@ public class CardControl extends AnchorPane {
         return card.getColor().getFxColor();
     }
 
-    public Property<Card> cardProperty() {
-        return cardProperty;
+    public void setSelected() {
+        this.setBorder(new Border(new BorderStroke(Color.BLUE,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
     }
 
-    public Card getCard() {
-        return cardProperty.getValue();
+    public void setUnselected() {
+        this.setBorder(null);
     }
-
-    public void setCard(Card card) {
-        cardProperty.setValue(card);
-    }
-
 }
