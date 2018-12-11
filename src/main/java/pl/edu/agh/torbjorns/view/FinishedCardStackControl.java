@@ -13,7 +13,7 @@ import pl.edu.agh.torbjorns.board.FinishedCardStack;
 import pl.edu.agh.torbjorns.card.Card;
 import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
-public class FinishedCardStackControl extends StackPane {
+public class FinishedCardStackControl extends StackPane implements StackControl {
 
     private final static double PADDING = 0.05 * CardControl.CARD_WIDTH;
 
@@ -37,11 +37,7 @@ public class FinishedCardStackControl extends StackPane {
     }
 
     private void onClickAction(MouseEvent event) {
-        controller.clickedOnFinishedCardStack(this);
-    }
-
-    public CardStack getCardStack() {
-        return cardStack;
+        controller.clickedOnCardStack(this);
     }
 
     private void initializeDimensions() {
@@ -57,15 +53,42 @@ public class FinishedCardStackControl extends StackPane {
 
     private void attachListener() {
         ObjectProperty<CardControl> cardControl = this.controller.selectedCardControlProperty();
-        cardControl.addListener((obj, oldCard, newCard) -> updateOnSelect(newCard.getCard()));
+        cardControl.addListener((obj, oldCard, newCard) -> updateOnSelect(newCard));
     }
 
-    private void updateOnSelect(Card newCard) {
-        if (cardStack.canPutCard(newCard)) {
+    private void updateOnSelect(CardControl newCardControl) {
+        if (newCardControl != null && cardStack.canPutCard(newCardControl.getCard())) {
             this.setBorder(new Border(new BorderStroke(Color.RED,
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         } else {
             this.setBorder(null);
         }
+    }
+
+    @Override
+    public void addCard(CardControl cardControl) {
+        Card card = cardControl.getCard();
+        getChildren().add(cardControl);
+        cardStack.putCard(card);
+    }
+
+    @Override
+    public void removeCard(CardControl cardControl) {
+        this.getChildren().remove(cardControl);
+        cardStack.removeCard();
+    }
+
+    @Override
+    public CardControl getTopCardControl() {
+        if (getChildren().size() == 0) {
+            return null;
+        }
+
+        return (CardControl) getChildren().get(getChildren().size() - 1);
+    }
+
+    @Override
+    public CardStack getCardStack() {
+        return cardStack;
     }
 }

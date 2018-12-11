@@ -2,18 +2,16 @@ package pl.edu.agh.torbjorns.view;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
-public class CardPlaceholderControl extends StackPane {
-    private Controller controller;
+public class CardPlaceholderControl extends StackPane implements ManageCardControl {
 
-    public CardPlaceholderControl(Controller controller) {
+    public CardPlaceholderControl() {
+
         ControlUtils.loadFxml(this);
         initializeDimensions();
 
-        this.controller = controller;
-        this.setOnMouseClicked(this::onClickAction);
+
     }
 
     private void initializeDimensions() {
@@ -24,5 +22,26 @@ public class CardPlaceholderControl extends StackPane {
     }
 
     private void onClickAction(MouseEvent event) {
+        // controller.clickedOnBufferZone(this);
+    }
+
+    public boolean canPutCard() {
+        return (getChildren().size() == 0);
+    }
+
+    public void addCard(CardControl cardControl) {
+        getChildren().add(cardControl);
+    }
+
+    public void removeCard(CardControl cardControl) {
+        getChildren().remove(cardControl);
+    }
+
+    public CardControl getCard() {
+        if (!canPutCard()) {
+            return (CardControl) getChildren().get(getChildren().size() - 1);
+        } else {
+            return null;
+        }
     }
 }

@@ -4,10 +4,8 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.card.Card;
 import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
@@ -21,8 +19,6 @@ public class CardControl extends AnchorPane {
 
     private final Property<Card> cardProperty = new SimpleObjectProperty<>();
 
-    private Controller controller;
-
     @FXML
     private Label topLeftLabel;
 
@@ -32,17 +28,10 @@ public class CardControl extends AnchorPane {
     @FXML
     private Label bottomRightLabel;
 
-    public CardControl(Controller controller) {
+    public CardControl() {
         ControlUtils.loadFxml(this);
         initializeDimensions();
         initializeLabels();
-
-        this.controller = controller;
-        this.setOnMouseClicked(this::onClickAction);
-    }
-
-    public void onClickAction(MouseEvent event) {
-        controller.clickedOnCard(this);
     }
 
     public Property<Card> cardProperty() {
@@ -101,4 +90,12 @@ public class CardControl extends AnchorPane {
         return card.getColor().getFxColor();
     }
 
+    public void setSelected() {
+        this.setBorder(new Border(new BorderStroke(Color.BLUE,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+    }
+
+    public void setUnselected() {
+        this.setBorder(null);
+    }
 }

@@ -9,37 +9,30 @@ import javafx.scene.layout.GridPane;
 import pl.edu.agh.torbjorns.board.Board;
 import pl.edu.agh.torbjorns.board.BoardFactory;
 import pl.edu.agh.torbjorns.board.BufferZone;
-import pl.edu.agh.torbjorns.board.CardStack;
 import pl.edu.agh.torbjorns.board.deck.DeckFactory;
-import pl.edu.agh.torbjorns.card.Card;
-import pl.edu.agh.torbjorns.view.CardControl;
-import pl.edu.agh.torbjorns.view.CardPlaceholderControl;
-import pl.edu.agh.torbjorns.view.FinishedCardStackControl;
-import pl.edu.agh.torbjorns.view.WorkingCardStackControl;
+import pl.edu.agh.torbjorns.view.*;
 
 public class Controller {
 
     public static final double BASE_WIDTH = 1280.0;
     public static final double BASE_HEIGHT = 720.0;
-
+    private final ObjectProperty<CardControl> selectedCardControl;
     @FXML
     private GridPane mainGrid;
-
     @Inject
     private DeckFactory deckFactory;
-
     @Inject
     private BoardFactory boardFactory;
-
     private Board board;
 
-    private ObjectProperty<CardControl> selectedCardControl;
+    public Controller() {
+        this.selectedCardControl = new SimpleObjectProperty<>(null);
+    }
 
     public void lateInitialize() {
         var deck = deckFactory.createDeck();
         board = boardFactory.createBoard(deck);
 
-        initializeSelectedCardControl();
         initializeFinishedCardStacks();
         initializeWorkingCardStacks();
         initializeBufferZone();
@@ -68,52 +61,45 @@ public class Controller {
         for (var i = 0; i < BufferZone.SIZE; i++) {
             var column = (i % 2) + 8;
             var row = i / 2;
-            mainGrid.add(new CardPlaceholderControl(this), column, row);
+            mainGrid.add(new CardPlaceholderControl(), column, row);
         }
     }
 
-    private void initializeSelectedCardControl() {
-        this.selectedCardControl = new SimpleObjectProperty<>(null);
+    public void clickedOnCardStack(StackControl stackControl) {
+        if (stackControl.getTopCardControl() == selectedCardControl.get()) {
+            return;
+        }
+
+        if (selectedCardControl.get() == null) {
+            var topCardControl = stackControl.getTopCardControl();
+            selectedCardControl.setValue(topCardControl);
+            topCardControl.setSelected();
+        } else {
+            if (stackControl.getCardStack().canPutCard(selectedCardControl.get().getCard())) {
+                moveSelectedCard(stackControl);
+            } else {
+                selectedCardControl.get().setUnselected();
+                selectedCardControl.setValue(null);
+            }
+
+        }
     }
 
-    public void clickedOnCard(CardControl cardControl) {
-        selectedCardControl.setValue(cardControl);
+    public void clickedOnBufferZone(CardPlaceholderControl placeholder) {
+
     }
 
-    public void clickedOnFinishedCardStack(FinishedCardStackControl stackControl) {
-        CardStack stack = stackControl.getCardStack();
-
-        putCardIntoStack(stack);
-        setPositionOfCard(stackControl.getLayoutX(), stackControl.getLayoutY());
-    }
-
-    public void clickedOnWorkingCardStack(WorkingCardStackControl stackControl) {
-        CardStack stack = stackControl.getCardStack();
-
-        putCardIntoStack(stack);
-        setPositionOfCard(stackControl.getLayoutX(), stackControl.getLayoutY());
-    }
-
-    private void putCardIntoStack(CardStack stack) {
+    private void moveSelectedCard(StackControl newStack) {
         if (this.selectedCardControl.get() == null) {
             return;
         }
 
-        Card selectedCard = this.selectedCardControl.get().getCard();
-        stack.putCard(selectedCard);
+        var selectedCardControl = this.selectedCardControl.get();
+        var oldStack = (StackControl) this.selectedCardControl.get().getParent();
+
+        oldStack.removeCard(selectedCardControl);
+        newStack.addCard(selectedCardControl);
         this.selectedCardControl.setValue(null);
-    }
-
-    private void setPositionOfCard(double x, double y) {
-        if (this.selectedCardControl.get() == null) {
-            return;
-        }
-
-        selectedCardControl.get().relocate(x, y);
-    }
-
-    public Card getSelectedCard() {
-        return selectedCardControl.get().getCard();
     }
 
     public ObjectProperty<CardControl> selectedCardControlProperty() {
