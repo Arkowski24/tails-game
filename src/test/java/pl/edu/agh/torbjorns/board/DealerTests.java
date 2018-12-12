@@ -13,14 +13,13 @@ public class DealerTests {
 
     @Test
     void dealCardsTest(){
-
         //  Given
-        Dealer dealer = new Dealer();
         Deck deck = new DeckFactory().createDeck();
-        Board board;
+        Board board = new BoardFactory().createBoard();
+        Dealer dealer = new Dealer();
 
         //  When
-        board = new BoardFactory(dealer).createBoard(deck);
+        dealer.dealCards(board, deck);
 
         //  Then
         for(int i = 0; i < board.getWorkingCardStacks().size(); i++){

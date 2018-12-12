@@ -10,6 +10,7 @@ import javafx.scene.layout.Priority;
 import pl.edu.agh.torbjorns.board.Board;
 import pl.edu.agh.torbjorns.board.BoardFactory;
 import pl.edu.agh.torbjorns.board.BufferZone;
+import pl.edu.agh.torbjorns.board.Dealer;
 import pl.edu.agh.torbjorns.board.deck.DeckFactory;
 import pl.edu.agh.torbjorns.view.*;
 
@@ -27,6 +28,8 @@ public class Controller {
     private DeckFactory deckFactory;
     @Inject
     private BoardFactory boardFactory;
+    @Inject
+    private Dealer dealer;
     private Board board;
 
     public Controller() {
@@ -35,7 +38,8 @@ public class Controller {
 
     public void lateInitialize() {
         var deck = deckFactory.createDeck();
-        board = boardFactory.createBoard(deck);
+        board = boardFactory.createBoard();
+        dealer.dealCards(board, deck);
 
         initializeFinishedCardStacks();
         initializeWorkingCardStacks();

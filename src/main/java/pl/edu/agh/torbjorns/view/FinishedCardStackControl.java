@@ -5,8 +5,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.StackPane;
 import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.board.FinishedCardStack;
 import pl.edu.agh.torbjorns.card.Card;
@@ -57,10 +56,9 @@ public class FinishedCardStackControl extends StackPane implements CardControlMa
 
     private void updateOnSelect(CardControl newCardControl) {
         if (newCardControl != null && cardStack.canPutCard(newCardControl.getCard())) {
-            this.setBorder(new Border(new BorderStroke(Color.RED,
-                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+            getStyleClass().add("target");
         } else {
-            this.setBorder(null);
+            getStyleClass().remove("target");
         }
     }
 
