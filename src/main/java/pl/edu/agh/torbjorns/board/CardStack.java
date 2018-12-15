@@ -1,24 +1,40 @@
 package pl.edu.agh.torbjorns.board;
 
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import pl.edu.agh.torbjorns.card.Card;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 
-public abstract class CardStack {
+public abstract class CardStack implements CardManager {
 
-    private final List<Card> cards = new ArrayList<>();
+    private final ObservableList<Card> cards = FXCollections.observableArrayList();
 
+    @Override
     public abstract boolean canPutCard(Card card);
 
     public boolean isEmpty() {
         return cards.isEmpty();
     }
 
-    public List<Card> getCards() {
-        return Collections.unmodifiableList(cards);
+    public ObservableList<Card> getCards() {
+        return cards;
+    }
+
+    public Binding<Card> topCardProperty() {
+        return Bindings.createObjectBinding(() -> peekCard().orElse(null), cards);
+    }
+
+    @Override
+    public Optional<Card> peekCard() {
+        if (isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(getTopCard());
+        }
     }
 
     public Card getTopCard() {
@@ -31,12 +47,14 @@ public abstract class CardStack {
         this.cards.addAll(cards);
     }
 
+    @Override
     public void putCard(Card card) {
         requireCanPutCard(card);
         cards.add(card);
     }
 
-    public Card removeCard() {
+    @Override
+    public Card takeCard() {
         requireNotEmpty();
         return cards.remove(cards.size() - 1);
     }

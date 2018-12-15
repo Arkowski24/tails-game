@@ -27,7 +27,7 @@
     -fx-border-style: segments(5, 5) line-cap round;
 }
 
-.card-placeholder.target,
+.buffer-zone-place.target .card-placeholder,
 .working-card-stack.target,
 .finished-card-stack.target .card-placeholder {
     -fx-border-color: transparent, rgba(255, 0, 0, 0.8);

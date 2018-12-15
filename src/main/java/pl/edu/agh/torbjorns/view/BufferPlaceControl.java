@@ -1,51 +1,38 @@
 package pl.edu.agh.torbjorns.view;
 
-import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import pl.edu.agh.torbjorns.Controller;
-import pl.edu.agh.torbjorns.board.FinishedCardStack;
+import pl.edu.agh.torbjorns.board.BufferPlace;
 
 import static pl.edu.agh.torbjorns.view.util.ControlUtils.*;
 import static pl.edu.agh.torbjorns.view.util.ObservableUtils.*;
 
-public class FinishedCardStackControl extends StackPane {
+public class BufferPlaceControl extends StackPane {
 
-    private final static double PADDING = 0.05 * CardControl.CARD_WIDTH;
-
-    private final FinishedCardStack cardStack;
+    private final BufferPlace place;
     private final Controller controller;
 
-    @FXML
-    private Label suitLabel;
-
-    public FinishedCardStackControl(FinishedCardStack cardStack, Controller controller) {
-        this.cardStack = cardStack;
+    public BufferPlaceControl(BufferPlace place, Controller controller) {
+        this.place = place;
         this.controller = controller;
 
         loadFxml(this);
         initializeDimensions();
-        initializeSuitLabel();
         initializeCard();
         initializeIsTarget();
         setOnMouseClicked(this::onMouseClicked);
     }
 
     private void initializeDimensions() {
-        setPadding(new Insets(PADDING));
-    }
-
-    private void initializeSuitLabel() {
-        var suit = cardStack.getSuit();
-        var color = suit.getColor();
-        suitLabel.setText(suit.getSymbolText());
-        suitLabel.setTextFill(color.getFxColor());
+        setMinWidth(CardControl.CARD_WIDTH);
+        setMaxWidth(CardControl.CARD_WIDTH);
+        setMinHeight(CardControl.CARD_HEIGHT);
+        setMaxHeight(CardControl.CARD_HEIGHT);
     }
 
     private void initializeCard() {
-        observe(cardStack.topCardProperty(), card -> {
+        observe(place.cardProperty(), card -> {
             getChildren().removeIf(children -> children instanceof CardControl);
 
             if (card != null) {
@@ -57,15 +44,16 @@ public class FinishedCardStackControl extends StackPane {
     }
 
     private void initializeIsTarget() {
-        var isTargetBinding = isTargetBinding(controller, cardStack);
+        var isTargetBinding = isTargetBinding(controller, place);
 
         observe(isTargetBinding, isTarget -> {
+            System.out.println("xd");
             setHasStyleClass(this, "target", isTarget);
         });
     }
 
     private void onMouseClicked(MouseEvent event) {
-        controller.onCardManagerClicked(cardStack);
+        controller.onCardManagerClicked(place);
     }
 
 }

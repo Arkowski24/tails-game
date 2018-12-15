@@ -6,17 +6,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.card.Card;
-import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
 import static javafx.beans.binding.Bindings.*;
+import static pl.edu.agh.torbjorns.view.util.ControlUtils.*;
 
 public class CardControl extends AnchorPane {
 
     public final static double CARD_WIDTH = 110;
     public final static double CARD_HEIGHT = 1.5 * CARD_WIDTH;
 
-    private final Property<Card> cardProperty = new SimpleObjectProperty<>();
+    private final Property<Card> cardProperty = new SimpleObjectProperty<>(null);
+    private final Controller controller;
 
     @FXML
     private Label topLeftLabel;
@@ -27,10 +29,13 @@ public class CardControl extends AnchorPane {
     @FXML
     private Label bottomRightLabel;
 
-    public CardControl() {
-        ControlUtils.loadFxml(this);
+    public CardControl(Controller controller) {
+        this.controller = controller;
+
+        loadFxml(this);
         initializeDimensions();
         initializeLabels();
+        initializeSelection();
     }
 
     public Property<Card> cardProperty() {
@@ -89,11 +94,18 @@ public class CardControl extends AnchorPane {
         return card.getColor().getFxColor();
     }
 
-    public void setSelected() {
-        getStyleClass().add("selected");
+    private void initializeSelection() {
+        controller.selectedCardProperty().addListener((_observable, _oldValue, selectedCard) -> {
+            setHasSelectedClass(selectedCard == getCard());
+        });
     }
 
-    public void setUnselected() {
-        getStyleClass().remove("selected");
+    private void setHasSelectedClass(boolean hasSelectedClass) {
+        if (hasSelectedClass) {
+            getStyleClass().add("selected");
+        } else {
+            getStyleClass().remove("selected");
+        }
     }
+
 }
