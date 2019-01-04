@@ -1,6 +1,7 @@
 package pl.edu.agh.torbjorns.view;
 
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -22,6 +23,9 @@ public class FinishedCardStackControl extends StackPane {
 
     @SuppressWarnings("FieldCanBeLocal")
     private BooleanBinding isTargetBinding;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private ObjectBinding<@Nullable Card> topCardBinding;
 
     @FXML private Label suitLabel;
 
@@ -48,7 +52,8 @@ public class FinishedCardStackControl extends StackPane {
     }
 
     private void initializeBindings() {
-        observe(cardStack.topCardProperty(), this::setCard);
+        topCardBinding = cardStack.topCardBinding();
+        observe(topCardBinding, this::setCard);
 
         isTargetBinding = createIsTargetBinding(controller, cardStack);
         observe(isTargetBinding, this::setIsTarget);

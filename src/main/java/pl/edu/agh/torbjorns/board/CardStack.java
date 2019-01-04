@@ -1,6 +1,6 @@
 package pl.edu.agh.torbjorns.board;
 
-import javafx.beans.binding.Binding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +26,7 @@ public abstract class CardStack implements CardHolder {
         return cards;
     }
 
-    public Binding<@Nullable Card> topCardProperty() {
+    public ObjectBinding<@Nullable Card> topCardBinding() {
         return createObjectBinding(this::peekTopCard, cards);
     }
 
