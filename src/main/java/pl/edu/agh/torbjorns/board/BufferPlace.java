@@ -2,48 +2,51 @@ package pl.edu.agh.torbjorns.board;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
-import lombok.NonNull;
+import org.jetbrains.annotations.Nullable;
 import pl.edu.agh.torbjorns.card.Card;
 
-import java.util.Optional;
+public class BufferPlace implements CardHolder {
 
-public class BufferPlace implements CardManager {
+    private final Property<@Nullable Card> cardProperty = new SimpleObjectProperty<>(null);
 
-    private final Property<Card> card = new SimpleObjectProperty<>(null);
-
-    public Property<Card> cardProperty() {
-        return card;
+    public Property<@Nullable Card> cardProperty() {
+        return cardProperty;
     }
 
     @Override
-    public Optional<Card> peekCard() {
-        return Optional.ofNullable(card.getValue());
+    public boolean isEmpty() {
+        return cardProperty.getValue() == null;
     }
 
     @Override
-    public boolean canPutCard(@NonNull Card card) {
+    public @Nullable Card peekTopCard() {
+        return cardProperty.getValue();
+    }
+
+    @Override
+    public boolean canPutCard(Card card) {
         return isEmpty();
     }
 
     @Override
-    public void putCard(@NonNull Card card) {
+    public void putCard(Card card) {
         requireEmpty();
-        this.card.setValue(card);
+        cardProperty.setValue(card);
+        card.setHolder(this);
     }
 
     @Override
     public Card takeCard() {
         requireNotEmpty();
 
-        var card = this.card.getValue();
-        this.card.setValue(null);
+        var card = cardProperty.getValue();
+        assert card != null;
+        cardProperty.setValue(null);
+        card.setHolder(null);
 
         return card;
     }
 
-    public boolean isEmpty() {
-        return card.getValue() == null;
-    }
 
     private void requireEmpty() {
         if (!isEmpty())

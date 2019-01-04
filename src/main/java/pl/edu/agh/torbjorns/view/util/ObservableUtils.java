@@ -5,11 +5,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import pl.edu.agh.torbjorns.Controller;
-import pl.edu.agh.torbjorns.board.CardManager;
+import pl.edu.agh.torbjorns.board.CardHolder;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static javafx.beans.binding.Bindings.*;
 
@@ -25,15 +24,11 @@ public class ObservableUtils {
         observable.addListener((ListChangeListener<T>) c -> observer.accept(observable));
     }
 
-    public static <T, U> void map(ObservableValue<T> source1, Function<T, U> mapper) {
-        createObjectBinding(() -> mapper.apply(source1.getValue()), source1);
-    }
-
-    public static BooleanBinding isTargetBinding(Controller controller, CardManager cardManager) {
+    public static BooleanBinding createIsTargetBinding(Controller controller, CardHolder cardHolder) {
         return createBooleanBinding(
                 () -> {
                     var selectedCard = controller.selectedCardProperty().getValue();
-                    return selectedCard != null && cardManager.canPutCard(selectedCard);
+                    return selectedCard != null && cardHolder.canPutCard(selectedCard);
                 },
                 controller.selectedCardProperty());
     }

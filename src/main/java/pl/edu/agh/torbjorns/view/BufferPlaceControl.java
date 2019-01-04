@@ -1,9 +1,10 @@
 package pl.edu.agh.torbjorns.view;
 
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import org.jetbrains.annotations.Nullable;
 import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.board.BufferPlace;
+import pl.edu.agh.torbjorns.card.Card;
 
 import static pl.edu.agh.torbjorns.view.util.ControlUtils.*;
 import static pl.edu.agh.torbjorns.view.util.ObservableUtils.*;
@@ -19,9 +20,8 @@ public class BufferPlaceControl extends StackPane {
 
         loadFxml(this);
         initializeDimensions();
-        initializeCard();
-        initializeIsTarget();
-        setOnMouseClicked(this::onMouseClicked);
+        initializeBindings();
+        setOnMouseClicked(event -> onMouseClicked());
     }
 
     private void initializeDimensions() {
@@ -31,29 +31,29 @@ public class BufferPlaceControl extends StackPane {
         setMaxHeight(CardControl.CARD_HEIGHT);
     }
 
-    private void initializeCard() {
-        observe(place.cardProperty(), card -> {
-            getChildren().removeIf(children -> children instanceof CardControl);
+    private void initializeBindings() {
+        observe(place.cardProperty(), this::setCard);
 
-            if (card != null) {
-                var cardControl = new CardControl(controller);
-                cardControl.setCard(card);
-                getChildren().add(cardControl);
-            }
-        });
+        var isTargetBinding = createIsTargetBinding(controller, place);
+        observe(isTargetBinding, this::setIsTarget);
     }
 
-    private void initializeIsTarget() {
-        var isTargetBinding = isTargetBinding(controller, place);
+    private void setCard(@Nullable Card card) {
+        getChildren().removeIf(children -> children instanceof CardControl);
 
-        observe(isTargetBinding, isTarget -> {
-            System.out.println("xd");
-            setHasStyleClass(this, "target", isTarget);
-        });
+        if (card != null) {
+            var cardControl = new CardControl(controller);
+            cardControl.setCard(card);
+            getChildren().add(cardControl);
+        }
     }
 
-    private void onMouseClicked(MouseEvent event) {
-        controller.onCardManagerClicked(place);
+    private void setIsTarget(boolean isTarget) {
+        setHasStyleClass(this, "target", isTarget);
+    }
+
+    private void onMouseClicked() {
+        controller.onCardHolderClicked(place);
     }
 
 }

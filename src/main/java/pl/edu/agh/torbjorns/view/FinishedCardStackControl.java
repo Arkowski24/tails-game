@@ -3,10 +3,11 @@ package pl.edu.agh.torbjorns.view;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import org.jetbrains.annotations.Nullable;
 import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.board.FinishedCardStack;
+import pl.edu.agh.torbjorns.card.Card;
 
 import static pl.edu.agh.torbjorns.view.util.ControlUtils.*;
 import static pl.edu.agh.torbjorns.view.util.ObservableUtils.*;
@@ -18,8 +19,7 @@ public class FinishedCardStackControl extends StackPane {
     private final FinishedCardStack cardStack;
     private final Controller controller;
 
-    @FXML
-    private Label suitLabel;
+    @FXML private Label suitLabel;
 
     public FinishedCardStackControl(FinishedCardStack cardStack, Controller controller) {
         this.cardStack = cardStack;
@@ -28,9 +28,8 @@ public class FinishedCardStackControl extends StackPane {
         loadFxml(this);
         initializeDimensions();
         initializeSuitLabel();
-        initializeCard();
-        initializeIsTarget();
-        setOnMouseClicked(this::onMouseClicked);
+        initializeBindings();
+        setOnMouseClicked(event -> onMouseClicked());
     }
 
     private void initializeDimensions() {
@@ -44,28 +43,29 @@ public class FinishedCardStackControl extends StackPane {
         suitLabel.setTextFill(color.getFxColor());
     }
 
-    private void initializeCard() {
-        observe(cardStack.topCardProperty(), card -> {
-            getChildren().removeIf(children -> children instanceof CardControl);
+    private void initializeBindings() {
+        observe(cardStack.topCardProperty(), this::setCard);
 
-            if (card != null) {
-                var cardControl = new CardControl(controller);
-                cardControl.setCard(card);
-                getChildren().add(cardControl);
-            }
-        });
+        var isTargetBinding = createIsTargetBinding(controller, cardStack);
+        observe(isTargetBinding, this::setIsTarget);
     }
 
-    private void initializeIsTarget() {
-        var isTargetBinding = isTargetBinding(controller, cardStack);
+    private void setCard(@Nullable Card card) {
+        getChildren().removeIf(children -> children instanceof CardControl);
 
-        observe(isTargetBinding, isTarget -> {
-            setHasStyleClass(this, "target", isTarget);
-        });
+        if (card != null) {
+            var cardControl = new CardControl(controller);
+            cardControl.setCard(card);
+            getChildren().add(cardControl);
+        }
     }
 
-    private void onMouseClicked(MouseEvent event) {
-        controller.onCardManagerClicked(cardStack);
+    private void setIsTarget(boolean isTarget) {
+        setHasStyleClass(this, "target", isTarget);
+    }
+
+    private void onMouseClicked() {
+        controller.onCardHolderClicked(cardStack);
     }
 
 }

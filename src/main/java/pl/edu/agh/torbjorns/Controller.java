@@ -3,18 +3,16 @@ package pl.edu.agh.torbjorns;
 import com.google.inject.Inject;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import pl.edu.agh.torbjorns.board.Board;
-import pl.edu.agh.torbjorns.board.BoardFactory;
-import pl.edu.agh.torbjorns.board.BufferZone;
-import pl.edu.agh.torbjorns.board.Dealer;
+import org.jetbrains.annotations.Nullable;
+import pl.edu.agh.torbjorns.board.*;
 import pl.edu.agh.torbjorns.board.deck.DeckFactory;
 import pl.edu.agh.torbjorns.card.Card;
 import pl.edu.agh.torbjorns.view.BufferPlaceControl;
-import pl.edu.agh.torbjorns.board.CardManager;
 import pl.edu.agh.torbjorns.view.FinishedCardStackControl;
 import pl.edu.agh.torbjorns.view.WorkingCardStackControl;
 
@@ -23,17 +21,13 @@ public class Controller {
     public static final double BASE_WIDTH = 1280.0;
     public static final double BASE_HEIGHT = 720.0;
 
-    private final ObjectProperty<Card> selectedCard = new SimpleObjectProperty<>(null);
-    private CardManager selectedCardManager;
+    private final ObjectProperty<@Nullable Card> selectedCardProperty = new SimpleObjectProperty<>(null);
 
-    @FXML
-    private GridPane mainGrid;
-    @Inject
-    private DeckFactory deckFactory;
-    @Inject
-    private BoardFactory boardFactory;
-    @Inject
-    private Dealer dealer;
+    @FXML private GridPane mainGrid;
+
+    @Inject private DeckFactory deckFactory;
+    @Inject private BoardFactory boardFactory;
+    @Inject private Dealer dealer;
     private Board board;
 
     public void lateInitialize() {
@@ -76,28 +70,44 @@ public class Controller {
         }
     }
 
-    public ObjectProperty<Card> selectedCardProperty() {
-        return selectedCard;
+    public ObservableValue<@Nullable Card> selectedCardProperty() {
+        return selectedCardProperty;
     }
 
-    public void onCardManagerClicked(CardManager cardManager) {
-        if (selectedCardManager == cardManager) {
-            selectedCard.setValue(null);
-            selectedCardManager = null;
-        } else if (selectedCardManager != null) {
-            if (cardManager.canPutCard(selectedCard.getValue())) {
-                var card = selectedCardManager.takeCard();
-                selectedCardManager = null;
-                selectedCard.setValue(null);
-                cardManager.putCard(card);
+    private @Nullable Card getSelectedCard() {
+        return selectedCardProperty.get();
+    }
+
+    private void selectCard(Card card) {
+        selectedCardProperty.setValue(card);
+    }
+
+    private void deselectCard() {
+        selectedCardProperty.setValue(null);
+    }
+
+    public void onCardHolderClicked(CardHolder clickedCardHolder) {
+        var selectedCard = getSelectedCard();
+
+        if (selectedCard != null) {
+            if (clickedCardHolder == selectedCard.getHolder()) {
+                deselectCard();
+            } else if (clickedCardHolder.canPutCard(selectedCard)) {
+                var selectedCardHolder = selectedCard.getHolder();
+                assert selectedCardHolder != null;
+
+                var movedCard = selectedCardHolder.takeCard();
+                assert movedCard == selectedCard;
+
+                deselectCard();
+                clickedCardHolder.putCard(movedCard);
             } else {
-                selectedCard.setValue(null);
-                selectedCardManager = null;
+                deselectCard();
             }
-        } else {
-            if (cardManager.peekCard().isPresent()) {
-                selectedCardManager = cardManager;
-                selectedCard.setValue(cardManager.peekCard().get());
+
+        } else { // selectedCard == null
+            if (!clickedCardHolder.isEmpty()) {
+                selectCard(clickedCardHolder.peekTopCard());
             }
         }
     }

@@ -1,11 +1,12 @@
 package pl.edu.agh.torbjorns.board;
 
+import org.jetbrains.annotations.Nullable;
 import pl.edu.agh.torbjorns.card.Card;
 
-import java.util.Optional;
+public interface CardHolder {
+    boolean isEmpty();
 
-public interface CardManager {
-    Optional<Card> peekCard();
+    @Nullable Card peekTopCard();
 
     boolean canPutCard(Card card);
 
