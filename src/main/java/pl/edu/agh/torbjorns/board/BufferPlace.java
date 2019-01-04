@@ -29,6 +29,11 @@ public class BufferPlace implements CardHolder {
     }
 
     @Override
+    public boolean canTakeCard() {
+        return !isEmpty();
+    }
+
+    @Override
     public void putCard(Card card) {
         requireEmpty();
         cardProperty.setValue(card);

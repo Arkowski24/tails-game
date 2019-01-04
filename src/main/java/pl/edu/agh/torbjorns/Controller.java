@@ -106,7 +106,7 @@ public class Controller {
             }
 
         } else { // selectedCard == null
-            if (!clickedCardHolder.isEmpty()) {
+            if (clickedCardHolder.canTakeCard()) {
                 selectCard(clickedCardHolder.peekTopCard());
             }
         }

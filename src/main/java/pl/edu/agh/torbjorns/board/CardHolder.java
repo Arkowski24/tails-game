@@ -10,6 +10,8 @@ public interface CardHolder {
 
     boolean canPutCard(Card card);
 
+    boolean canTakeCard();
+
     void putCard(Card card);
 
     Card takeCard();
