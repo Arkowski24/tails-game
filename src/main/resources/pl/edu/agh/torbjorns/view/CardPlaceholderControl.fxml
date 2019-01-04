@@ -1,0 +1,3 @@
+<?import javafx.scene.layout.StackPane?>
+<fx:root type="javafx.scene.layout.StackPane" xmlns:fx="http://javafx.com/fxml"
+         styleClass="card-placeholder"/>

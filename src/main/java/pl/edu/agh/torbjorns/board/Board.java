@@ -1,19 +1,14 @@
 package pl.edu.agh.torbjorns.board;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
+@RequiredArgsConstructor
+@Getter
 public class Board {
-
-    public List<CardStack> getWorkingCardStacks() {
-        return null;
-    }
-
-    public List<CardStack> getFinishedCardStacks() {
-        return null;
-    }
-
-    public BufferZone getBufferZone() {
-        return null;
-    }
-
+    private final List<FinishedCardStack> finishedCardStacks;
+    private final List<CardStack> workingCardStacks;
+    private final BufferZone bufferZone;
 }
