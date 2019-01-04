@@ -1,5 +1,6 @@
 package pl.edu.agh.torbjorns.view;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.scene.layout.StackPane;
 import org.jetbrains.annotations.Nullable;
 import pl.edu.agh.torbjorns.Controller;
@@ -13,6 +14,9 @@ public class BufferPlaceControl extends StackPane {
 
     private final BufferPlace place;
     private final Controller controller;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private BooleanBinding isTargetBinding;
 
     public BufferPlaceControl(BufferPlace place, Controller controller) {
         this.place = place;
@@ -34,7 +38,7 @@ public class BufferPlaceControl extends StackPane {
     private void initializeBindings() {
         observe(place.cardProperty(), this::setCard);
 
-        var isTargetBinding = createIsTargetBinding(controller, place);
+        isTargetBinding = createIsTargetBinding(controller, place);
         observe(isTargetBinding, this::setIsTarget);
     }
 

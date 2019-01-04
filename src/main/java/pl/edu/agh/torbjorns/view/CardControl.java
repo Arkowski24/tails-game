@@ -1,5 +1,6 @@
 package pl.edu.agh.torbjorns.view;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -21,6 +22,9 @@ public class CardControl extends AnchorPane {
 
     private final Property<@Nullable Card> cardProperty = new SimpleObjectProperty<>(null);
     private final Controller controller;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private BooleanBinding isSelectedBinding;
 
     @FXML private Label topLeftLabel;
     @FXML private Label centerLabel;
@@ -92,7 +96,7 @@ public class CardControl extends AnchorPane {
     }
 
     private void initializeBindings() {
-        var isSelectedBinding = createBooleanBinding(
+        isSelectedBinding = createBooleanBinding(
                 () -> cardProperty.getValue() == controller.selectedCardProperty().getValue(),
                 cardProperty, controller.selectedCardProperty());
 

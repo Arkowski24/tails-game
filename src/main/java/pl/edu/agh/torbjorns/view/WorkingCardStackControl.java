@@ -1,5 +1,6 @@
 package pl.edu.agh.torbjorns.view;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
@@ -20,6 +21,9 @@ public class WorkingCardStackControl extends VBox {
 
     private final CardStack cardStack;
     private final Controller controller;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private BooleanBinding isTargetBinding;
 
     public WorkingCardStackControl(CardStack cardStack, Controller controller) {
         this.cardStack = cardStack;
@@ -53,7 +57,7 @@ public class WorkingCardStackControl extends VBox {
     private void initializeBindings() {
         observe(cardStack.getCards(), this::setCards);
 
-        var isTargetBinding = createIsTargetBinding(controller, cardStack);
+        isTargetBinding = createIsTargetBinding(controller, cardStack);
         observe(isTargetBinding, this::setIsTarget);
     }
 

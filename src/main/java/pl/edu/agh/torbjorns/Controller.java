@@ -2,8 +2,8 @@ package pl.edu.agh.torbjorns;
 
 import com.google.inject.Inject;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
 import javafx.scene.layout.GridPane;
@@ -70,7 +70,7 @@ public class Controller {
         }
     }
 
-    public ObservableValue<@Nullable Card> selectedCardProperty() {
+    public ReadOnlyObjectProperty<@Nullable Card> selectedCardProperty() {
         return selectedCardProperty;
     }
 
