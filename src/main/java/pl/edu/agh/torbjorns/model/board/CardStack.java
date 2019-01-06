@@ -1,10 +1,10 @@
-package pl.edu.agh.torbjorns.board;
+package pl.edu.agh.torbjorns.model.board;
 
 import javafx.beans.binding.ObjectBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jetbrains.annotations.Nullable;
-import pl.edu.agh.torbjorns.card.Card;
+import pl.edu.agh.torbjorns.model.card.Card;
 
 import java.util.Collection;
 
@@ -13,9 +13,6 @@ import static javafx.beans.binding.Bindings.*;
 public abstract class CardStack implements CardHolder {
 
     private final ObservableList<Card> cards = FXCollections.observableArrayList();
-
-    @Override
-    public abstract boolean canPutCard(Card card);
 
     @Override
     public boolean isEmpty() {

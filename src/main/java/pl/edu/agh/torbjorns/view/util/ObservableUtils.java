@@ -5,7 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import pl.edu.agh.torbjorns.Controller;
-import pl.edu.agh.torbjorns.board.CardHolder;
+import pl.edu.agh.torbjorns.model.board.CardHolder;
 
 import java.util.List;
 import java.util.function.Consumer;

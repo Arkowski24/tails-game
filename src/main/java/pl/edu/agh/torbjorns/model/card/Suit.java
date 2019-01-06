@@ -1,4 +1,4 @@
-package pl.edu.agh.torbjorns.card;
+package pl.edu.agh.torbjorns.model.card;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

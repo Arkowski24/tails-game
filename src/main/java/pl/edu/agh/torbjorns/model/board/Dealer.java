@@ -1,9 +1,9 @@
-package pl.edu.agh.torbjorns.board;
+package pl.edu.agh.torbjorns.model.board;
 
 import lombok.RequiredArgsConstructor;
-import pl.edu.agh.torbjorns.board.deck.Deck;
-import pl.edu.agh.torbjorns.card.Card;
-import pl.edu.agh.torbjorns.card.Rank;
+import pl.edu.agh.torbjorns.model.board.deck.Deck;
+import pl.edu.agh.torbjorns.model.card.Card;
+import pl.edu.agh.torbjorns.model.card.Rank;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

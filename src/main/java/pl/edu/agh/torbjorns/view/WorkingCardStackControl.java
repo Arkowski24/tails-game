@@ -5,8 +5,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import pl.edu.agh.torbjorns.Controller;
-import pl.edu.agh.torbjorns.board.CardStack;
-import pl.edu.agh.torbjorns.card.Card;
+import pl.edu.agh.torbjorns.model.board.CardStack;
+import pl.edu.agh.torbjorns.model.card.Card;
 
 import java.util.List;
 

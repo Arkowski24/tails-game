@@ -1,4 +1,4 @@
-package pl.edu.agh.torbjorns.board;
+package pl.edu.agh.torbjorns.model.board;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

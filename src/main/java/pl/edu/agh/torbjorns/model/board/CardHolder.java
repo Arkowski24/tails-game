@@ -1,7 +1,7 @@
-package pl.edu.agh.torbjorns.board;
+package pl.edu.agh.torbjorns.model.board;
 
 import org.jetbrains.annotations.Nullable;
-import pl.edu.agh.torbjorns.card.Card;
+import pl.edu.agh.torbjorns.model.card.Card;
 
 public interface CardHolder {
     boolean isEmpty();
