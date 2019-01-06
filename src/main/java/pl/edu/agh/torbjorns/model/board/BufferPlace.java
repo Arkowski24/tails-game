@@ -34,14 +34,14 @@ public class BufferPlace implements CardHolder {
     }
 
     @Override
-    public void putCard(Card card) {
+    public void putCard(Card card, boolean forcibly) {
         requireEmpty();
         cardProperty.setValue(card);
         card.setHolder(this);
     }
 
     @Override
-    public Card takeCard() {
+    public Card takeCard(boolean forcibly) {
         requireNotEmpty();
 
         var card = cardProperty.getValue();

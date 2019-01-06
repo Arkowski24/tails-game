@@ -6,9 +6,14 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.jetbrains.annotations.Nullable;
+import pl.edu.agh.torbjorns.model.history.ActionHistory;
+import pl.edu.agh.torbjorns.model.history.MoveCardAction;
 import pl.edu.agh.torbjorns.model.board.*;
 import pl.edu.agh.torbjorns.model.board.deck.DeckFactory;
 import pl.edu.agh.torbjorns.model.card.Card;
@@ -28,6 +33,7 @@ public class Controller {
     @Inject private DeckFactory deckFactory;
     @Inject private BoardFactory boardFactory;
     @Inject private Dealer dealer;
+    @Inject private ActionHistory actionHistory;
     private Board board;
 
     public void lateInitialize() {
@@ -35,9 +41,16 @@ public class Controller {
         board = boardFactory.createBoard();
         dealer.dealCards(board, deck);
 
+        initializeUndoShortcut();
+
         initializeFinishedCardStacks();
         initializeWorkingCardStacks();
         initializeBufferZone();
+    }
+
+    private void initializeUndoShortcut() {
+        var keyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        mainGrid.getScene().getAccelerators().put(keyCombination, this::onUndoShortcutPressed);
     }
 
     private void initializeFinishedCardStacks() {
@@ -90,25 +103,23 @@ public class Controller {
         var selectedCard = getSelectedCard();
 
         if (selectedCard != null) {
-            if (clickedCardHolder == selectedCard.getHolder()) {
-                deselectCard();
-            } else if (clickedCardHolder.canPutCard(selectedCard)) {
-                var selectedCardHolder = selectedCard.getHolder();
-                assert selectedCardHolder != null;
-
-                var movedCard = selectedCardHolder.takeCard();
-                assert movedCard == selectedCard;
-
-                deselectCard();
-                clickedCardHolder.putCard(movedCard);
-            } else {
-                deselectCard();
+            var selectedCardHolder = selectedCard.getHolder();
+            if (clickedCardHolder != selectedCardHolder && clickedCardHolder.canPutCard(selectedCard)) {
+                actionHistory.performAction(new MoveCardAction(selectedCardHolder, clickedCardHolder));
             }
+            deselectCard();
 
         } else { // selectedCard == null
             if (clickedCardHolder.canTakeCard()) {
                 selectCard(clickedCardHolder.peekTopCard());
             }
+        }
+    }
+
+    private void onUndoShortcutPressed() {
+        deselectCard();
+        if (actionHistory.canUndoLastAction()) {
+            actionHistory.undoLastAction();
         }
     }
 

@@ -12,7 +12,15 @@ public interface CardHolder {
 
     boolean canTakeCard();
 
-    void putCard(Card card);
+    void putCard(Card card, boolean forcibly);
 
-    Card takeCard();
+    Card takeCard(boolean forcibly);
+
+    default void putCard(Card card) { putCard(card, false); }
+
+    default void putCardForcibly(Card card) { putCard(card, true); }
+
+    default Card takeCard() { return takeCard(false); }
+
+    default Card takeCardForcibly() { return takeCard(true); }
 }
