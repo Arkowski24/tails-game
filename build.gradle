@@ -30,6 +30,7 @@ dependencies {
     implementation "org.openjfx:javafx-graphics:11.0.1:$platform"
     implementation "org.openjfx:javafx-controls:11.0.1:$platform"
     implementation "org.openjfx:javafx-fxml:11.0.1:$platform"
+    implementation 'org.jetbrains:annotations:16.0.2'
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.1.0"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.1.0"

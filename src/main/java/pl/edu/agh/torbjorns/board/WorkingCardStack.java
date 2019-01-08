@@ -15,6 +15,11 @@ public class WorkingCardStack extends CardStack {
         }
     }
 
+    @Override
+    public boolean canTakeCard() {
+        return !isEmpty();
+    }
+
     private boolean haveOppositeColors(Card card1, Card card2) {
         return card1.getColor() != card2.getColor();
     }

@@ -1,47 +1,53 @@
 package pl.edu.agh.torbjorns.view;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import org.jetbrains.annotations.Nullable;
+import pl.edu.agh.torbjorns.Controller;
 import pl.edu.agh.torbjorns.card.Card;
-import pl.edu.agh.torbjorns.view.util.ControlUtils;
 
 import static javafx.beans.binding.Bindings.*;
+import static pl.edu.agh.torbjorns.view.util.ControlUtils.*;
+import static pl.edu.agh.torbjorns.view.util.ObservableUtils.*;
 
 public class CardControl extends AnchorPane {
 
     public final static double CARD_WIDTH = 110;
     public final static double CARD_HEIGHT = 1.5 * CARD_WIDTH;
 
-    private final Property<Card> cardProperty = new SimpleObjectProperty<>();
+    private final Property<@Nullable Card> cardProperty = new SimpleObjectProperty<>(null);
+    private final Controller controller;
 
-    @FXML
-    private Label topLeftLabel;
+    @SuppressWarnings("FieldCanBeLocal")
+    private BooleanBinding isSelectedBinding;
 
-    @FXML
-    private Label centerLabel;
+    @FXML private Label topLeftLabel;
+    @FXML private Label centerLabel;
+    @FXML private Label bottomRightLabel;
 
-    @FXML
-    private Label bottomRightLabel;
+    public CardControl(Controller controller) {
+        this.controller = controller;
 
-    public CardControl() {
-        ControlUtils.loadFxml(this);
+        loadFxml(this);
         initializeDimensions();
         initializeLabels();
+        initializeBindings();
     }
 
-    public Property<Card> cardProperty() {
+    public Property<@Nullable Card> cardProperty() {
         return cardProperty;
     }
 
-    public Card getCard() {
+    public @Nullable Card getCard() {
         return cardProperty.getValue();
     }
 
-    public void setCard(Card card) {
+    public void setCard(@Nullable Card card) {
         cardProperty.setValue(card);
     }
 
@@ -89,11 +95,16 @@ public class CardControl extends AnchorPane {
         return card.getColor().getFxColor();
     }
 
-    public void setSelected() {
-        getStyleClass().add("selected");
+    private void initializeBindings() {
+        isSelectedBinding = createBooleanBinding(
+                () -> cardProperty.getValue() == controller.selectedCardProperty().getValue(),
+                cardProperty, controller.selectedCardProperty());
+
+        observe(isSelectedBinding, this::setIsSelected);
     }
 
-    public void setUnselected() {
-        getStyleClass().remove("selected");
+    private void setIsSelected(boolean isSelected) {
+        setHasStyleClass(this, "selected", isSelected);
     }
+
 }

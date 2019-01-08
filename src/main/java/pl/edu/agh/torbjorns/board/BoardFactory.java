@@ -26,7 +26,12 @@ public class BoardFactory {
                         .limit(WORKING_CARD_STACK_COUNT)
                         .collect(toUnmodifiableList());
 
-        var bufferZone = new BufferZone();
+        var bufferPlaces =
+                Stream.generate(BufferPlace::new)
+                        .limit(BufferZone.SIZE)
+                        .collect(toUnmodifiableList());
+
+        var bufferZone = new BufferZone(bufferPlaces);
 
         return new Board(finishedCardStacks, workingCardStacks, bufferZone);
     }

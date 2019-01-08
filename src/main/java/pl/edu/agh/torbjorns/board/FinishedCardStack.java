@@ -25,4 +25,9 @@ public class FinishedCardStack extends CardStack {
         }
     }
 
+    @Override
+    public boolean canTakeCard() {
+        return false;
+    }
+
 }
