@@ -1,9 +1,9 @@
-package pl.edu.agh.torbjorns.board;
+package pl.edu.agh.torbjorns.model.board;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import org.jetbrains.annotations.Nullable;
-import pl.edu.agh.torbjorns.card.Card;
+import pl.edu.agh.torbjorns.model.card.Card;
 
 public class BufferPlace implements CardHolder {
 
@@ -34,14 +34,14 @@ public class BufferPlace implements CardHolder {
     }
 
     @Override
-    public void putCard(Card card) {
+    public void putCard(Card card, boolean forcibly) {
         requireEmpty();
         cardProperty.setValue(card);
         card.setHolder(this);
     }
 
     @Override
-    public Card takeCard() {
+    public Card takeCard(boolean forcibly) {
         requireNotEmpty();
 
         var card = cardProperty.getValue();

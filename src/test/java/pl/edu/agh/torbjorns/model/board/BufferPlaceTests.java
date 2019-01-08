@@ -1,8 +1,8 @@
-package pl.edu.agh.torbjorns.board;
+package pl.edu.agh.torbjorns.model.board;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import pl.edu.agh.torbjorns.card.Card;
+import pl.edu.agh.torbjorns.model.card.Card;
 
 import static org.assertj.core.api.Assertions.*;
 

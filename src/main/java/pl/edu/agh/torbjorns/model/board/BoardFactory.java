@@ -1,6 +1,6 @@
-package pl.edu.agh.torbjorns.board;
+package pl.edu.agh.torbjorns.model.board;
 
-import pl.edu.agh.torbjorns.card.Suit;
+import pl.edu.agh.torbjorns.model.card.Suit;
 
 import java.util.List;
 import java.util.stream.Stream;

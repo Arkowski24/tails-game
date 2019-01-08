@@ -1,8 +1,8 @@
-package pl.edu.agh.torbjorns.board.deck;
+package pl.edu.agh.torbjorns.model.board.deck;
 
-import pl.edu.agh.torbjorns.card.Card;
-import pl.edu.agh.torbjorns.card.Rank;
-import pl.edu.agh.torbjorns.card.Suit;
+import pl.edu.agh.torbjorns.model.card.Card;
+import pl.edu.agh.torbjorns.model.card.Rank;
+import pl.edu.agh.torbjorns.model.card.Suit;
 
 import java.util.Collections;
 import java.util.stream.Stream;

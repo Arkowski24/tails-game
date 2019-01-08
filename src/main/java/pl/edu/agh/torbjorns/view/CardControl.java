@@ -9,7 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.Nullable;
 import pl.edu.agh.torbjorns.Controller;
-import pl.edu.agh.torbjorns.card.Card;
+import pl.edu.agh.torbjorns.model.card.Card;
 
 import static javafx.beans.binding.Bindings.*;
 import static pl.edu.agh.torbjorns.view.util.ControlUtils.*;

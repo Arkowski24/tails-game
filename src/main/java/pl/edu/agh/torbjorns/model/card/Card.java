@@ -1,10 +1,10 @@
-package pl.edu.agh.torbjorns.card;
+package pl.edu.agh.torbjorns.model.card;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
-import pl.edu.agh.torbjorns.board.CardHolder;
+import pl.edu.agh.torbjorns.model.board.CardHolder;
 
 @Getter
 @RequiredArgsConstructor

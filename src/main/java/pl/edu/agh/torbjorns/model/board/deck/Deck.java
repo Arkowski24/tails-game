@@ -1,7 +1,7 @@
-package pl.edu.agh.torbjorns.board.deck;
+package pl.edu.agh.torbjorns.model.board.deck;
 
 import lombok.RequiredArgsConstructor;
-import pl.edu.agh.torbjorns.card.Card;
+import pl.edu.agh.torbjorns.model.card.Card;
 
 import java.util.List;
 

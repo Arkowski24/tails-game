@@ -4,8 +4,8 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.scene.layout.StackPane;
 import org.jetbrains.annotations.Nullable;
 import pl.edu.agh.torbjorns.Controller;
-import pl.edu.agh.torbjorns.board.BufferPlace;
-import pl.edu.agh.torbjorns.card.Card;
+import pl.edu.agh.torbjorns.model.board.BufferPlace;
+import pl.edu.agh.torbjorns.model.card.Card;
 
 import static pl.edu.agh.torbjorns.view.util.ControlUtils.*;
 import static pl.edu.agh.torbjorns.view.util.ObservableUtils.*;
