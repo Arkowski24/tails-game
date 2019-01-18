@@ -2,48 +2,55 @@ package pl.edu.agh.torbjorns;
 
 import com.google.inject.Inject;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import pl.edu.agh.torbjorns.board.Board;
-import pl.edu.agh.torbjorns.board.BoardFactory;
-import pl.edu.agh.torbjorns.board.BufferZone;
-import pl.edu.agh.torbjorns.board.Dealer;
-import pl.edu.agh.torbjorns.board.deck.DeckFactory;
-import pl.edu.agh.torbjorns.view.*;
+import org.jetbrains.annotations.Nullable;
+import pl.edu.agh.torbjorns.model.history.ActionHistory;
+import pl.edu.agh.torbjorns.model.history.MoveCardAction;
+import pl.edu.agh.torbjorns.model.board.*;
+import pl.edu.agh.torbjorns.model.board.deck.DeckFactory;
+import pl.edu.agh.torbjorns.model.card.Card;
+import pl.edu.agh.torbjorns.view.BufferPlaceControl;
+import pl.edu.agh.torbjorns.view.FinishedCardStackControl;
+import pl.edu.agh.torbjorns.view.WorkingCardStackControl;
 
 public class Controller {
 
     public static final double BASE_WIDTH = 1280.0;
     public static final double BASE_HEIGHT = 720.0;
 
-    private final ObjectProperty<CardControl> selectedCardControl;
-    private CardControlManager selectedCardControlManager;
+    private final ObjectProperty<@Nullable Card> selectedCardProperty = new SimpleObjectProperty<>(null);
 
-    @FXML
-    private GridPane mainGrid;
-    @Inject
-    private DeckFactory deckFactory;
-    @Inject
-    private BoardFactory boardFactory;
-    @Inject
-    private Dealer dealer;
+    @FXML private GridPane mainGrid;
+
+    @Inject private DeckFactory deckFactory;
+    @Inject private BoardFactory boardFactory;
+    @Inject private Dealer dealer;
+    @Inject private ActionHistory actionHistory;
     private Board board;
-
-    public Controller() {
-        this.selectedCardControl = new SimpleObjectProperty<>(null);
-    }
 
     public void lateInitialize() {
         var deck = deckFactory.createDeck();
         board = boardFactory.createBoard();
         dealer.dealCards(board, deck);
 
+        initializeUndoShortcut();
+
         initializeFinishedCardStacks();
         initializeWorkingCardStacks();
         initializeBufferZone();
+    }
+
+    private void initializeUndoShortcut() {
+        var keyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        mainGrid.getScene().getAccelerators().put(keyCombination, this::onUndoShortcutPressed);
     }
 
     private void initializeFinishedCardStacks() {
@@ -68,42 +75,52 @@ public class Controller {
 
     private void initializeBufferZone() {
         for (var i = 0; i < BufferZone.SIZE; i++) {
+            var place = board.getBufferZone().getPlace(i);
+            var placeControl = new BufferPlaceControl(place, this);
             var column = (i % 2) + 8;
             var row = i / 2;
-            var placeholder = new CardPlaceholderControl();
-            mainGrid.add(placeholder, column, row);
-            placeholder.setController(this);
+            mainGrid.add(placeControl, column, row);
         }
     }
 
-    public void clickedOnCardManager(CardControlManager cardManager) {
-        if (cardManager == selectedCardControlManager) {
-            return;
-        }
+    public ReadOnlyObjectProperty<@Nullable Card> selectedCardProperty() {
+        return selectedCardProperty;
+    }
 
-        if (selectedCardControl.get() == null) {
-            var topCardControl = cardManager.getTopCard();
-            selectedCardControl.setValue(topCardControl);
-            selectedCardControlManager = cardManager;
-            topCardControl.setSelected();
-        } else {
-            var selectedCard = selectedCardControl.get();
-            if (cardManager.canPutCard(selectedCard)) {
-                selectedCardControlManager.removeCard(selectedCard);
-                cardManager.addCard(selectedCard);
+    private @Nullable Card getSelectedCard() {
+        return selectedCardProperty.get();
+    }
+
+    private void selectCard(Card card) {
+        selectedCardProperty.setValue(card);
+    }
+
+    private void deselectCard() {
+        selectedCardProperty.setValue(null);
+    }
+
+    public void onCardHolderClicked(CardHolder clickedCardHolder) {
+        var selectedCard = getSelectedCard();
+
+        if (selectedCard != null) {
+            var selectedCardHolder = selectedCard.getHolder();
+            if (clickedCardHolder != selectedCardHolder && clickedCardHolder.canPutCard(selectedCard)) {
+                actionHistory.performAction(new MoveCardAction(selectedCardHolder, clickedCardHolder));
             }
-            deselectSelectedCard();
+            deselectCard();
+
+        } else { // selectedCard == null
+            if (clickedCardHolder.canTakeCard()) {
+                selectCard(clickedCardHolder.peekTopCard());
+            }
         }
     }
 
-    public ObjectProperty<CardControl> selectedCardControlProperty() {
-        return selectedCardControl;
+    private void onUndoShortcutPressed() {
+        deselectCard();
+        if (actionHistory.canUndoLastAction()) {
+            actionHistory.undoLastAction();
+        }
     }
 
-    private void deselectSelectedCard() {
-        CardControl cardControl = this.selectedCardControl.get();
-        cardControl.setUnselected();
-        selectedCardControl.setValue(null);
-        selectedCardControlManager = null;
-    }
 }

@@ -1,0 +1,8 @@
+<?import javafx.scene.layout.StackPane?>
+<?import pl.edu.agh.torbjorns.view.CardPlaceholderControl?>
+<fx:root type="javafx.scene.layout.StackPane" xmlns:fx="http://javafx.com/fxml"
+         styleClass="buffer-zone-place">
+
+    <CardPlaceholderControl/>
+
+</fx:root>

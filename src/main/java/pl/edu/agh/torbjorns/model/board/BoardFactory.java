@@ -1,6 +1,6 @@
-package pl.edu.agh.torbjorns.board;
+package pl.edu.agh.torbjorns.model.board;
 
-import pl.edu.agh.torbjorns.card.Suit;
+import pl.edu.agh.torbjorns.model.card.Suit;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -26,7 +26,12 @@ public class BoardFactory {
                         .limit(WORKING_CARD_STACK_COUNT)
                         .collect(toUnmodifiableList());
 
-        var bufferZone = new BufferZone();
+        var bufferPlaces =
+                Stream.generate(BufferPlace::new)
+                        .limit(BufferZone.SIZE)
+                        .collect(toUnmodifiableList());
+
+        var bufferZone = new BufferZone(bufferPlaces);
 
         return new Board(finishedCardStacks, workingCardStacks, bufferZone);
     }

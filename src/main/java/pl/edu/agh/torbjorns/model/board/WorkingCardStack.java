@@ -1,7 +1,7 @@
-package pl.edu.agh.torbjorns.board;
+package pl.edu.agh.torbjorns.model.board;
 
-import pl.edu.agh.torbjorns.card.Card;
-import pl.edu.agh.torbjorns.card.Rank;
+import pl.edu.agh.torbjorns.model.card.Card;
+import pl.edu.agh.torbjorns.model.card.Rank;
 
 public class WorkingCardStack extends CardStack {
 
@@ -13,6 +13,11 @@ public class WorkingCardStack extends CardStack {
             var topCard = getTopCard();
             return haveOppositeColors(card, topCard) && haveSubsequentRanks(card, topCard);
         }
+    }
+
+    @Override
+    public boolean canTakeCard() {
+        return !isEmpty();
     }
 
     private boolean haveOppositeColors(Card card1, Card card2) {

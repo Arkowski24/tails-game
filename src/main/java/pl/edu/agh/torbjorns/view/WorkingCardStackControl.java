@@ -1,40 +1,46 @@
 package pl.edu.agh.torbjorns.view;
 
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.VBox;
 import pl.edu.agh.torbjorns.Controller;
-import pl.edu.agh.torbjorns.board.CardStack;
-import pl.edu.agh.torbjorns.card.Card;
+import pl.edu.agh.torbjorns.model.board.CardStack;
+import pl.edu.agh.torbjorns.model.card.Card;
+
+import java.util.List;
 
 import static javafx.beans.binding.Bindings.*;
+import static pl.edu.agh.torbjorns.view.util.ControlUtils.*;
+import static pl.edu.agh.torbjorns.view.util.ObservableUtils.*;
 
-public class WorkingCardStackControl extends VBox implements CardControlManager {
+public class WorkingCardStackControl extends VBox {
 
     private final static double MAX_SPACING = -0.85 * CardControl.CARD_HEIGHT;
     private final static double PADDING_VERTICAL = 0.05 * CardControl.CARD_WIDTH;
 
     private final CardStack cardStack;
-
     private final Controller controller;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private BooleanBinding isTargetBinding;
 
     public WorkingCardStackControl(CardStack cardStack, Controller controller) {
         this.cardStack = cardStack;
         this.controller = controller;
 
         getStyleClass().add("working-card-stack");
+        initializeLayout();
+        initializeBindings();
+        setOnMouseClicked(event -> onMouseClicked());
+    }
+
+    private void initializeLayout() {
         setMinHeight(0);
         setPadding(new Insets(PADDING_VERTICAL, 0, PADDING_VERTICAL, 0));
         setAlignment(Pos.TOP_CENTER);
         spacingProperty().bind(
                 createDoubleBinding(this::calculateSpacing, getChildren(), heightProperty()));
-
-        initializeCards();
-        attachListener();
-        this.setOnMouseClicked(this::onClickAction);
     }
 
     private double calculateSpacing() {
@@ -48,59 +54,31 @@ public class WorkingCardStackControl extends VBox implements CardControlManager 
         }
     }
 
-    private void onClickAction(MouseEvent event) {
-        controller.clickedOnCardManager(this);
+    private void initializeBindings() {
+        observe(cardStack.getCards(), this::setCards);
+
+        isTargetBinding = createIsTargetBinding(controller, cardStack);
+        observe(isTargetBinding, this::setIsTarget);
     }
 
-    private void initializeCards() {
-        for (Card card : cardStack.getCards()) {
-            CardControl cardControl = new CardControl();
-            cardControl.setCard(card);
-            getChildren().add(cardControl);
-        }
+    private void setCards(List<Card> cards) {
+        getChildren().removeIf(children -> children instanceof CardControl);
+
+        cards.stream()
+                .map(card -> {
+                    var control = new CardControl(controller);
+                    control.setCard(card);
+                    return control;
+                })
+                .forEachOrdered(getChildren()::add);
     }
 
-    private void attachListener() {
-        ObjectProperty<CardControl> cardControl = this.controller.selectedCardControlProperty();
-        cardControl.addListener((obj, oldCard, newCard) -> updateOnSelect(newCard));
+    private void setIsTarget(boolean isTarget) {
+        setHasStyleClass(this, "target", isTarget);
     }
 
-    private void updateOnSelect(CardControl newCardControl) {
-        if (newCardControl != null && cardStack.canPutCard(newCardControl.getCard())) {
-            getStyleClass().add("target");
-        } else {
-            getStyleClass().remove("target");
-        }
+    private void onMouseClicked() {
+        controller.onCardHolderClicked(cardStack);
     }
 
-    @Override
-    public void addCard(CardControl cardControl) {
-        Card card = cardControl.getCard();
-        getChildren().add(cardControl);
-        cardStack.putCard(card);
-    }
-
-    @Override
-    public void removeCard(CardControl cardControl) {
-        getChildren().remove(cardControl);
-        cardStack.removeCard();
-    }
-
-    @Override
-    public CardControl getTopCard() {
-        if (getChildren().size() == 0) {
-            return null;
-        }
-        return (CardControl) getChildren().get(getChildren().size() - 1);
-    }
-
-    @Override
-    public boolean canPutCard(CardControl cardControl) {
-        if (cardControl == null) {
-            return false;
-        }
-
-        var card = cardControl.getCard();
-        return cardStack.canPutCard(card);
-    }
 }
